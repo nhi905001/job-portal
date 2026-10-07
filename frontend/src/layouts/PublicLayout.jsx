@@ -14,6 +14,7 @@ import {
   Building2, 
   ChevronDown 
 } from 'lucide-react';
+import NotificationBell from '../components/common/NotificationBell';
 
 export default function PublicLayout() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -101,16 +102,8 @@ export default function PublicLayout() {
                     </Link>
                   )}
 
-                  {/* Notification Bell (chỉ demo icon hoặc badge) */}
-                  <button
-                    type="button"
-                    aria-label="Thông báo"
-                    className="p-2 text-[#6B6152] hover:text-[#1E1E1E] rounded-xl hover:bg-[#F2ECE1] transition-colors relative"
-                    title="Thông báo hệ thống"
-                  >
-                    <Bell className="w-5 h-5" />
-                    <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500" />
-                  </button>
+                  {/* Notification Bell */}
+                  <NotificationBell />
 
                   {/* User Profile Dropdown */}
                   <div className="relative">

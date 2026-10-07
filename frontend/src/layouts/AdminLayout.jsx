@@ -21,6 +21,7 @@ import {
   ShieldCheck,
   Building
 } from 'lucide-react';
+import NotificationBell from '../components/common/NotificationBell';
 
 export default function AdminLayout() {
   const { user, logout } = useAuth();
@@ -239,14 +240,7 @@ export default function AdminLayout() {
             </Link>
 
             {/* Notification Bell */}
-            <button
-              type="button"
-              aria-label="Thông báo"
-              className="p-2 text-[#6B6152] hover:text-[#1E1E1E] rounded-xl hover:bg-[#FAF7F2] relative transition-colors"
-            >
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#F6B779]" />
-            </button>
+            <NotificationBell />
 
             {/* Role Badge */}
             <span
