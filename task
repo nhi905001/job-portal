@@ -108,27 +108,27 @@ graph TD
 ### Phase 2: Cổng Người tìm việc (`/public`)
 *Mục tiêu: Đảm bảo khách và Job Seeker hoàn thành trọn vẹn quy trình tìm việc và nộp hồ sơ.*
 
-- [ ] **Task 2.1 (U007, U006):** Trang danh sách việc làm (`/public` hoặc `/public/jobs`):
+- [x] **Task 2.1 (U007, U006):** Trang danh sách việc làm (`/public` hoặc `/public/jobs`):
   - Bộ lọc tìm kiếm: Từ khóa tiêu đề, Công ty, Ngành nghề (`industryId`), Loại việc (`jobTypeId`).
   - Danh sách tin hiển thị dạng thẻ đẹp mắt, phân trang và sắp xếp theo ngày đăng/mức lương.
-- [ ] **Task 2.2 (U008, U023):** Trang chi tiết tin tuyển dụng (`/public/jobs/:id`):
+- [x] **Task 2.2 (U008, U023):** Trang chi tiết tin tuyển dụng (`/public/jobs/:id`):
   - Thông tin mô tả công việc, trách nhiệm, yêu cầu, quyền lợi, địa điểm, mức lương.
   - Khối thông tin công ty và danh sách đánh giá của công ty (`ReviewResponse`).
   - Nút "Ứng tuyển ngay" (mở modal hoặc form nộp CV).
-- [ ] **Task 2.3 (U010):** Trang Hồ sơ cá nhân (`/public/profile`):
+- [x] **Task 2.3 (U010):** Trang Hồ sơ cá nhân (`/public/profile`):
   - Cập nhật số điện thoại, tóm tắt bản thân (`summary`), upload ảnh đại diện và tài liệu đính kèm.
-- [ ] **Task 2.4 (U011):** Form ứng tuyển việc làm:
+- [x] **Task 2.4 (U011):** Form ứng tuyển việc làm:
   - Cho phép upload file CV (PDF/DOCX, tối đa 10MB) qua `fileService`.
   - Nhập thư ngỏ (`coverLetter`), kiểm tra điều kiện tin còn hạn và `status = OPEN`.
-- [ ] **Task 2.5 (U012):** Quản lý đơn ứng tuyển của tôi (`/public/my-applications`):
+- [x] **Task 2.5 (U012):** Quản lý đơn ứng tuyển của tôi (`/public/my-applications`):
   - Danh sách đơn kèm badge trạng thái: `APPLIED`, `SHORTLISTED`, `INTERVIEWING`, `OFFERED`, `REJECTED`.
   - Nút "Rút đơn" (chỉ kích hoạt khi đơn ở trạng thái `APPLIED`) kèm hộp thoại xác nhận.
-- [ ] **Task 2.6 (U018):** Chọn khung giờ phỏng vấn:
+- [x] **Task 2.6 (U018):** Chọn khung giờ phỏng vấn:
   - Khi đơn được `SHORTLISTED`, mở danh sách khung giờ trống (`onlyFree=true`) để ứng viên chọn và book lịch (`POST /api/interview-slots/{id}/book`).
-- [ ] **Task 2.7 (U021):** Xem và phản hồi Offer (`/public/my-offers`):
+- [x] **Task 2.7 (U021):** Xem và phản hồi Offer (`/public/my-offers`):
   - Xem thông tin lương khởi điểm, ngày bắt đầu làm việc.
   - Hai nút hành động: "Chấp nhận Offer" (`accept=true`) hoặc "Từ chối" (`accept=false`).
-- [ ] **Task 2.8 (U023):** Viết đánh giá công ty (`ReviewModal`):
+- [x] **Task 2.8 (U023):** Viết đánh giá công ty (`ReviewModal`):
   - Chọn số sao (1 đến 5 sao) và nhập nhận xét chân thực.
 
 ---
