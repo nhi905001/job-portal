@@ -136,22 +136,22 @@ graph TD
 ### Phase 3: Cổng Nhà tuyển dụng Doanh nghiệp (`/admin/recruiter`)
 *Mục tiêu: Giúp Recruiter quản lý tin, lọc CV và hoàn thiện vòng đời tuyển dụng.*
 
-- [ ] **Task 3.1 (U004, U005, U006):** Quản lý tin tuyển dụng (`/admin/jobs`):
+- [x] **Task 3.1 (U004, U005, U006):** Quản lý tin tuyển dụng (`/admin/jobs`):
   - Danh sách tin do recruiter đăng (lọc theo `status`: `OPEN`, `CLOSED`, `DRAFT`).
   - Form tạo/sửa tin tuyển dụng: Validation tiêu đề, hạn nộp, mức lương, địa điểm trực thuộc công ty, mô tả công việc.
   - Nút xóa tin (ngăn xóa nếu đã có đơn nộp, gợi ý chuyển sang `CLOSED`).
-- [ ] **Task 3.2 (U013, U014):** Quản lý đơn ứng tuyển & Duyệt hồ sơ (`/admin/jobs/:jobId/applications`):
+- [x] **Task 3.2 (U013, U014):** Quản lý đơn ứng tuyển & Duyệt hồ sơ (`/admin/jobs/:jobId/applications`):
   - Bảng danh sách ứng viên nộp đơn theo từng tin tuyển dụng, lọc theo trạng thái.
   - Xem CV trực tuyến (nhúng PDF viewer hoặc link tải file) và xem chi tiết hồ sơ ứng viên.
   - Cập nhật trạng thái ứng viên (Từ chối đơn `REJECTED`).
-- [ ] **Task 3.3 (U015):** Danh sách rút gọn Shortlist (`/admin/shortlists`):
+- [x] **Task 3.3 (U015):** Danh sách rút gọn Shortlist (`/admin/shortlists`):
   - Nút đưa ứng viên từ `APPLIED` vào Shortlist kèm ghi chú (`note`).
   - Quản lý danh sách Shortlist, hủy đưa vào shortlist nếu cần.
-- [ ] **Task 3.4 (U017, U019):** Quản lý phỏng vấn (`/admin/interviews`):
+- [x] **Task 3.4 (U017, U019):** Quản lý phỏng vấn (`/admin/interviews`):
   - Tạo khung giờ phỏng vấn: `startTime` (tương lai), `endTime`, `meetingLink`.
   - Xem các slot đã được ứng viên đặt lịch.
   - Form chấm điểm và ghi nhận feedback sau phỏng vấn (Điểm từ 1-10 kèm nhận xét).
-- [ ] **Task 3.5 (U020):** Gửi Offer việc làm:
+- [x] **Task 3.5 (U020):** Gửi Offer việc làm:
   - Khi đơn đang ở trạng thái `INTERVIEWING`, mở form nhập mức lương (`salary > 0`) và ngày bắt đầu làm việc (`startDate`).
   - Gửi Offer sang trạng thái `PENDING` và theo dõi phản hồi của ứng viên.
 
