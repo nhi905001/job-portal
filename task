@@ -160,17 +160,17 @@ graph TD
 ### Phase 4: Cổng Quản trị viên Toàn quyền (`/admin/system`)
 *Mục tiêu: Đảm bảo Admin kiểm soát toàn bộ người dùng, danh mục dữ liệu và nội dung cộng đồng.*
 
-- [ ] **Task 4.1 (U016):** Quản lý người dùng (`/admin/users`):
+- [x] **Task 4.1 (U016):** Quản lý người dùng (`/admin/users`):
   - Xem danh sách người dùng kèm bộ lọc role (`ADMIN`, `RECRUITER`, `JOB_SEEKER`) và tìm kiếm.
   - Form tạo tài khoản Nhà tuyển dụng (`RECRUITER`), gắn kết bắt buộc với một Công ty cụ thể.
   - Nút Khóa / Mở khóa tài khoản (`PATCH /api/users/{id}/active`) kèm xác nhận (chặn tự khóa chính mình).
-- [ ] **Task 4.2 (U002):** Quản lý Công ty & Địa điểm (`/admin/companies`):
+- [x] **Task 4.2 (U002):** Quản lý Công ty & Địa điểm (`/admin/companies`):
   - CRUD thông tin công ty: tên, mô tả, website, upload logo qua `fileService`.
   - CRUD địa điểm làm việc trực thuộc công ty (`CompanyLocation`: thành phố, địa chỉ).
-- [ ] **Task 4.3 (U003):** Quản lý Danh mục Ngành nghề & Loại hình công việc (`/admin/categories`):
+- [x] **Task 4.3 (U003):** Quản lý Danh mục Ngành nghề & Loại hình công việc (`/admin/categories`):
   - Quản lý Ngành nghề (`Industries`: Thêm, sửa tên, xóa).
   - Quản lý Loại công việc (`Job Types`: Full-time, Part-time, Remote, Thực tập...).
-- [ ] **Task 4.4 (U024):** Kiểm duyệt đánh giá công ty (`/admin/reviews`):
+- [x] **Task 4.4 (U024):** Kiểm duyệt đánh giá công ty (`/admin/reviews`):
   - Bảng danh sách review của người dùng, phân loại theo số sao và công ty.
   - Nút xóa/ẩn các review vi phạm tiêu chuẩn cộng đồng (`DELETE /api/reviews/{id}`).
 
