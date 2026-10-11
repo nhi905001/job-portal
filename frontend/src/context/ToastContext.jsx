@@ -39,6 +39,9 @@ export function ToastProvider({ children }) {
           } else if (toast.type === 'error') {
             icon = <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />;
             border = 'border-rose-200/80 bg-white text-rose-950';
+          } else if (toast.type === 'warning') {
+            icon = <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />;
+            border = 'border-amber-200/80 bg-white text-amber-950';
           }
 
           return (

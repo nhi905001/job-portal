@@ -25,6 +25,14 @@ export default function LoginPage() {
   const [serverError, setServerError] = useState('');
   const [feedbackSuccess, setFeedbackSuccess] = useState('');
 
+  // Tự động thông báo nếu phiên đăng nhập hết hạn từ interceptor 401
+  React.useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('expired') === 'true') {
+      setServerError('Phiên đăng nhập của bạn đã hết hạn. Vui lòng đăng nhập lại.');
+    }
+  }, [location.search]);
+
   // Validation rules
   const validateField = (fieldName, value) => {
     if (fieldName === 'fullName') {

@@ -178,11 +178,11 @@ graph TD
 
 ### Phase 5: Hệ thống Thông báo & Tối ưu Trải nghiệm (Cross-Cutting Features)
 
-- [ ] **Task 5.1 (U022):** Chuông thông báo toàn hệ thống:
+- [x] **Task 5.1 (U022):** Chuông thông báo toàn hệ thống:
   - Gọi `GET /api/notifications/unread-count` định kỳ (polling mỗi 30-60 giây hoặc khi đổi trang).
   - Dropdown xem danh sách thông báo mới nhất.
   - Đánh dấu đã đọc (`PATCH /api/notifications/{id}/read`) khi click vào thông báo.
-- [ ] **Task 5.2:** Xử lý lỗi toàn cục & UX tương tác:
+- [x] **Task 5.2:** Xử lý lỗi toàn cục & UX tương tác:
   - Bắt lỗi `401 Unauthorized` tự động xóa token và chuyển về trang đăng nhập.
   - Bắt lỗi `400 Validation` hiển thị text đỏ dưới đúng ô input từ `response.data.errors`.
   - Bắt lỗi `409 Conflict` (nộp đơn trùng, slot đã đặt, xóa danh mục đang dùng...) hiển thị thông báo toast thân thiện.
