@@ -12,7 +12,7 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import PublicOnlyRoute from './routes/PublicOnlyRoute';
 
 // Auth Page
-import LoginPage from './components/LoginPage';
+import LoginPage from './pages/LoginPage';
 
 // Public Pages (Khách & Job Seeker)
 import HomePage from './pages/public/HomePage';

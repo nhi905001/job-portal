@@ -48,3 +48,7 @@ pnpm-debug.log*
 __pycache__/
 *.pyc
 
+
+# Uploads
+backend/uploads/*
+!backend/uploads/2b265158-f0d4-45a4-a72b-fee28c1a3940.docx
