@@ -1,100 +1,129 @@
 import React from 'react';
-import { FileText, Search, Eye } from 'lucide-react';
+import { useApplications } from '../../hooks/useApplications';
+import Card from '../../components/common/Card';
+import Pagination from '../../components/common/Pagination';
+import ConfirmDialog from '../../components/common/ConfirmDialog';
+import {
+  ApplicationFilterBar,
+  AdminApplicationTable,
+  ShortlistModal,
+  CandidateProfileModal,
+} from '../../features/applications';
 
 export default function ApplicationManagementPage() {
+  const {
+    applications,
+    page,
+    totalPages,
+    totalElements,
+    isLoading,
+    selectedJobId,
+    statusFilter,
+    jobOptions,
+    shortlistModalOpen,
+    appToShortlist,
+    shortlistNote,
+    isShortlisting,
+    rejectDialogOpen,
+    appToReject,
+    isRejecting,
+    profileModalOpen,
+    candidateProfile,
+    selectedAppForView,
+    isLoadingProfile,
+    setPage,
+    setShortlistNote,
+    setShortlistModalOpen,
+    setRejectDialogOpen,
+    setProfileModalOpen,
+    handleJobFilterChange,
+    handleStatusFilterChange,
+    handleViewCandidateProfile,
+    handleOpenShortlist,
+    handleConfirmShortlist,
+    handleOpenReject,
+    handleConfirmReject,
+  } = useApplications();
+
   return (
     <div className="space-y-6">
+      {/* Page Header */}
       <div>
-        <h1 className="text-xl sm:text-2xl font-bold text-[#1E1E1E] tracking-tight">
-          Quản lý Đơn Ứng Tuyển
-        </h1>
-        <p className="text-xs text-[#8A8073] mt-1">
-          Duyệt hồ sơ ứng viên nộp theo từng tin tuyển dụng, đưa vào Shortlist hoặc từ chối đơn
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Quản Lý Đơn Ứng Tuyển
+          </h1>
+          <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[11px] font-bold border border-amber-200/60">
+            Hồ sơ
+          </span>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500 mt-1">
+          Xem xét hồ sơ ứng viên, lọc theo tin tuyển dụng, đưa vào Shortlist hoặc cập nhật trạng thái.
         </p>
       </div>
 
-      <div className="bg-white border border-[#EFE9DF] rounded-3xl overflow-hidden shadow-xs">
-        <div className="p-4 border-b border-[#F4EFE6] flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="relative w-full sm:w-72">
-            <Search className="w-4 h-4 text-[#9E9587] absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Tìm theo tên ứng viên hoặc email..."
-              className="w-full pl-9 pr-3.5 py-2 text-xs bg-[#FAF7F2] border border-[#E8E2D6] rounded-xl text-[#1E1E1E] placeholder:text-[#A8A196] focus:outline-none focus:border-[#F6B779] focus:ring-2 focus:ring-[#F6B779]/20"
-            />
-          </div>
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <select className="px-3 py-2 text-xs bg-[#FAF7F2] border border-[#E8E2D6] rounded-xl text-[#4A4135] focus:outline-none focus:border-[#F6B779]">
-              <option value="">Tất cả trạng thái</option>
-              <option value="APPLIED">APPLIED (Mới nộp)</option>
-              <option value="SHORTLISTED">SHORTLISTED (Đã chọn)</option>
-              <option value="INTERVIEWING">INTERVIEWING (Đang phỏng vấn)</option>
-              <option value="OFFERED">OFFERED (Đã gửi offer)</option>
-              <option value="REJECTED">REJECTED (Từ chối)</option>
-            </select>
-          </div>
-        </div>
+      {/* Filter Bar */}
+      <ApplicationFilterBar
+        selectedJobId={selectedJobId}
+        statusFilter={statusFilter}
+        jobOptions={jobOptions}
+        totalElements={totalElements}
+        onJobFilterChange={handleJobFilterChange}
+        onStatusFilterChange={handleStatusFilterChange}
+      />
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-[#FAF7F2]/80 border-b border-[#EFE9DF] text-[#786F62] font-semibold uppercase tracking-wider text-[11px]">
-              <tr>
-                <th className="px-5 py-3.5">Ứng viên</th>
-                <th className="px-5 py-3.5">Vị trí ứng tuyển</th>
-                <th className="px-5 py-3.5">Ngày nộp</th>
-                <th className="px-5 py-3.5">Trạng thái</th>
-                <th className="px-5 py-3.5 text-right">Hành động</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#F4EFE6] text-[#4A4135]">
-              {[
-                {
-                  id: 1,
-                  candidate: 'Nguyễn Văn A',
-                  email: 'seeker@gmail.com',
-                  job: 'Senior Frontend Developer (React)',
-                  date: '10/10/2026',
-                  status: 'APPLIED',
-                  statusColor: 'bg-amber-50 text-amber-800 border-amber-200',
-                },
-                {
-                  id: 2,
-                  candidate: 'Trần Thị B',
-                  email: 'tranb@gmail.com',
-                  job: 'Senior Frontend Developer (React)',
-                  date: '08/10/2026',
-                  status: 'SHORTLISTED',
-                  statusColor: 'bg-[#F2ECE1] text-[#4A3E31] border-[#E2DACD]',
-                },
-              ].map((app) => (
-                <tr key={app.id} className="hover:bg-[#FAF7F2]/50 transition-colors">
-                  <td className="px-5 py-4">
-                    <span className="font-semibold text-[#1E1E1E] block">{app.candidate}</span>
-                    <span className="text-[#8A8073] text-[11px]">{app.email}</span>
-                  </td>
-                  <td className="px-5 py-4 font-medium text-[#1E1E1E]">{app.job}</td>
-                  <td className="px-5 py-4 text-[#786F62]">{app.date}</td>
-                  <td className="px-5 py-4">
-                    <span className={`px-2.5 py-0.5 rounded-full font-semibold text-[11px] border ${app.statusColor}`}>
-                      {app.status}
-                    </span>
-                  </td>
-                  <td className="px-5 py-4 text-right space-x-1.5">
-                    <button type="button" className="px-2.5 py-1 text-[#4A4135] bg-[#FAF7F2] hover:bg-white border border-[#E6E0D6] rounded-xl font-medium transition-colors">
-                      Xem CV
-                    </button>
-                    {app.status === 'APPLIED' && (
-                      <button type="button" className="px-2.5 py-1 text-[#2C241E] bg-[#F6B779] hover:bg-[#EEA861] rounded-xl font-semibold transition-all shadow-xs">
-                        Shortlist
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* Table Card */}
+      <Card className="shadow-card border-slate-200/90 rounded-2xl overflow-hidden bg-white">
+        <AdminApplicationTable
+          applications={applications}
+          isLoading={isLoading}
+          onViewProfile={handleViewCandidateProfile}
+          onShortlist={handleOpenShortlist}
+          onReject={handleOpenReject}
+        />
+
+        <div className="px-4 py-2 border-t border-slate-100 bg-slate-50/50">
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            totalElements={totalElements}
+            size={10}
+            onPageChange={(p) => setPage(p)}
+          />
         </div>
-      </div>
+      </Card>
+
+      {/* Shortlist Modal */}
+      <ShortlistModal
+        isOpen={shortlistModalOpen}
+        app={appToShortlist}
+        note={shortlistNote}
+        isSubmitting={isShortlisting}
+        onClose={() => setShortlistModalOpen(false)}
+        onNoteChange={setShortlistNote}
+        onSubmit={handleConfirmShortlist}
+      />
+
+      {/* Profile Detail Modal */}
+      <CandidateProfileModal
+        isOpen={profileModalOpen}
+        app={selectedAppForView}
+        profile={candidateProfile}
+        isLoading={isLoadingProfile}
+        onClose={() => setProfileModalOpen(false)}
+      />
+
+      {/* Reject Confirm Dialog */}
+      <ConfirmDialog
+        isOpen={rejectDialogOpen}
+        title="Từ Chối Đơn Ứng Tuyển"
+        message={`Bạn có chắc chắn muốn từ chối đơn ứng tuyển của "${appToReject?.candidate?.fullName || appToReject?.user?.fullName || 'ứng viên này'}"? Trạng thái sẽ được chuyển sang REJECTED.`}
+        confirmText="Xác nhận từ chối"
+        confirmVariant="danger"
+        isLoading={isRejecting}
+        onConfirm={handleConfirmReject}
+        onCancel={() => setRejectDialogOpen(false)}
+      />
     </div>
   );
 }

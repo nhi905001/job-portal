@@ -1,0 +1,204 @@
+Viewed UserController.java:1-66
+Viewed CandidateProfile.java:1-31
+Listed directory repository
+Listed directory security
+Listed directory config
+Viewed SecurityConfig.java:1-91
+
+Sau khi phân tích toàn bộ **Backend Spring Boot REST API** (tại [README.md](file:///d:/DATA/TECH/MOCK-PROJECT/job-portal/README.md), các Controller, Service, Security) và tệp **`ProductBacklog.xlsx`** (gồm 24 User Stories từ U001 đến U024), dưới đây là bản **Kế hoạch Kiến trúc & Phân rã Task toàn diện** để triển khai hệ thống Job Portal.
+
+---
+
+## 1. Ma trận đối chiếu: Product Backlog (U001 – U024) vs Backend API
+
+| Mã US | Độ ưu tiên | User Story | Role | Backend API Mapping | Trạng thái API |
+|---|:---:|---|---|---|:---:|
+| **U001** | **High** | Đăng nhập hệ thống | Admin / Recruiter | `POST /api/auth/login` | Đã có |
+| **U002** | **High** | Quản lý công ty & địa điểm (thêm/sửa/xóa) | Admin | `POST/PUT/DELETE /api/companies`<br>`POST/PUT/DELETE /api/locations` | Đã có |
+| **U003** | **Medium** | Quản lý ngành nghề & loại công việc | Admin | `POST/PUT/DELETE /api/industries`<br>`POST/PUT/DELETE /api/job-types` | Đã có |
+| **U004** | **High** | Tạo tin tuyển dụng & mô tả công việc | Recruiter | `POST /api/job-listings` | Đã có |
+| **U005** | **Medium** | Sửa / xóa tin tuyển dụng (có xác nhận) | Recruiter | `PUT /api/job-listings/{id}`<br>`DELETE /api/job-listings/{id}` | Đã có |
+| **U006** | **Medium** | Phân trang / tìm kiếm / lọc / sắp xếp tin | Admin / Recruiter | `GET /api/job-listings?keyword=&status=&...` | Đã có |
+| **U007** | **High** | Xem danh sách việc làm trên trang chủ | Guest (Chưa login) | `GET /api/job-listings` (Public) | Đã có |
+| **U008** | **Medium** | Xem chi tiết tin tuyển dụng & công ty | Guest / All | `GET /api/job-listings/{id}`<br>`GET /api/companies/{id}` | Đã có |
+| **U009** | **High** | Đăng ký tài khoản người tìm việc | Job Seeker | `POST /api/auth/register` | Đã có |
+| **U010** | **High** | Tạo/cập nhật hồ sơ ứng viên (avatar, đính kèm) | Job Seeker | `GET/PUT /api/profiles/me`<br>`POST /api/files` | *Cần bổ sung Controller Profile ở BE* |
+| **U011** | **High** | Ứng tuyển vào tin kèm upload CV | Job Seeker | `POST /api/files`<br>`POST /api/applications` | Đã có |
+| **U012** | **Medium** | Xem trạng thái đơn đã nộp & rút đơn | Job Seeker | `GET /api/applications/my`<br>`DELETE /api/applications/{id}` | Đã có |
+| **U013** | **High** | Xem danh sách ứng viên theo tin & lọc status | Recruiter | `GET /api/applications?jobListingId=&status=` | Đã có |
+| **U014** | **High** | Xem hồ sơ/CV ứng viên & cập nhật trạng thái | Recruiter | `GET /api/profiles/user/{userId}`<br>`PATCH /api/applications/{id}/status` | Đã có |
+| **U015** | **Medium** | Đưa ứng viên vào danh sách rút gọn (Shortlist) | Recruiter | `POST /api/shortlists`<br>`GET /api/shortlists`<br>`DELETE /api/shortlists/{id}` | Đã có |
+| **U016** | **Medium** | Quản lý người dùng (tạo Recruiter, khóa/mở) | Admin | `GET/POST /api/users`<br>`PATCH /api/users/{id}/active` | Đã có |
+| **U017** | **High** | Tạo các khung giờ phỏng vấn (Interview Slots) | Recruiter | `POST /api/interview-slots`<br>`GET /api/interview-slots` | Đã có |
+| **U018** | **High** | Chọn khung giờ phỏng vấn phù hợp | Job Seeker | `POST /api/interview-slots/{id}/book` | Đã có |
+| **U019** | **Medium** | Ghi nhận đánh giá sau phỏng vấn (Feedback) | Recruiter | `POST /api/interview-feedbacks`<br>`GET /api/interview-feedbacks/slot/{id}` | Đã có |
+| **U020** | **High** | Gửi Offer cho ứng viên | Recruiter | `POST /api/offers` (đơn phải đang `INTERVIEWING`) | Đã có |
+| **U021** | **High** | Chấp nhận hoặc từ chối Offer | Job Seeker | `GET /api/offers/my`<br>`PATCH /api/offers/{id}/respond?accept=` | Đã có |
+| **U022** | **Medium** | Nhận thông báo khi có thay đổi trạng thái | All Users | `GET /api/notifications`<br>`GET /api/notifications/unread-count`<br>`PATCH /api/notifications/{id}/read` | Đã có |
+| **U023** | **Low** | Viết đánh giá (review) công ty | Job Seeker | `POST /api/reviews` | Đã có |
+| **U024** | **Low** | Kiểm duyệt / ẩn review không phù hợp | Admin | `DELETE /api/reviews/{id}` | Đã có |
+
+> [!NOTE]
+> **Điểm lưu ý Backend (Gap phát hiện):** 
+> Entity `CandidateProfile` đã có trong database model, nhưng chưa có `CandidateProfileController` và `CandidateProfileService`. Trong lúc hoàn thiện BE, FE có thể tích hợp qua mock module hoặc bổ sung nhanh 1 Controller nhỏ ở BE `CandidateProfileController` (`/api/profiles/me` và `/api/profiles/user/{id}`).
+
+---
+
+## 2. Kiến trúc tổng thể Frontend
+
+Hệ thống được tổ chức theo mô hình **Single Page Application (SPA)** chia 2 không gian định tuyến (Router) độc lập theo tài liệu kiến trúc:
+
+```mermaid
+graph TD
+    Root["Application Root (App.jsx)"] --> AuthProv["AuthProvider & NotificationProvider"]
+    AuthProv --> Router["React Router"]
+    
+    Router --> PublicSpace["/public (Khách & JOB_SEEKER)"]
+    Router --> AdminSpace["/admin (RECRUITER & ADMIN)"]
+    Router --> AuthPage["/login & /register"]
+
+    PublicSpace --> P_Home["Trang chủ việc làm (U007)"]
+    PublicSpace --> P_Detail["Chi tiết việc làm & Review (U008, U023)"]
+    PublicSpace --> P_Profile["Hồ sơ ứng viên (U010)"]
+    PublicSpace --> P_Apps["Đơn ứng tuyển của tôi (U011, U012)"]
+    PublicSpace --> P_Interviews["Chọn lịch phỏng vấn (U018)"]
+    PublicSpace --> P_Offers["Offer việc làm (U021)"]
+
+    AdminSpace --> R_Jobs["Quản lý tin đăng (U004, U005, U006)"]
+    AdminSpace --> R_Apps["Quản lý ứng viên & Duyệt CV (U013, U014)"]
+    AdminSpace --> R_Shortlist["Danh sách Shortlist (U015)"]
+    AdminSpace --> R_Schedule["Quản lý khung giờ & Chấm điểm (U017, U019)"]
+    AdminSpace --> R_Offers["Quản lý & Gửi Offer (U020)"]
+    AdminSpace --> A_Users["Admin: Quản lý người dùng & Tạo Recruiter (U016)"]
+    AdminSpace --> A_Master["Admin: Công ty, Địa điểm, Ngành, Loại việc (U002, U003)"]
+    AdminSpace --> A_Reviews["Admin: Kiểm duyệt Review (U024)"]
+```
+
+---
+
+## 3. Phân kỳ triển khai chi tiết (Phased Implementation Plan)
+
+### Phase 1: Nền tảng hạ tầng & Định tuyến bảo vệ (Core Infrastructure)
+*Mục tiêu: Thiết lập Router, Layouts, Route Guards, Service Layer, và Design System Token.*
+
+- [x] **Task 1.1:** Xác thực đăng nhập/đăng ký & Lưu trữ JWT Token (**U001, U009**).
+- [x] **Task 1.2:** Cài đặt `react-router-dom` và cấu hình phân vùng route:
+  - `PublicLayout`: Header có chuông thông báo, logo JobPortal, avatar, footer.
+  - `AdminLayout`: Sidebar chuyên nghiệp (Modern Clean Dashboard), Topbar, Breadcrumbs.
+  - `ProtectedRoute`: Chặn truy cập theo `user.role` (chuyển hướng về `/login` nếu 401 hoặc chưa đăng nhập; báo lỗi nếu role không khớp).
+- [x] **Task 1.3:** Hoàn thiện Service Modules chuẩn REST API:
+  - `jobService.js`: Tìm kiếm, phân trang, CRUD tin.
+  - `applicationService.js`: Nộp đơn, xem đơn, đổi status.
+  - `shortlistService.js`: Danh sách shortlist, thêm/xóa shortlist.
+  - `interviewService.js`: Quản lý slot, đặt lịch, chấm feedback.
+  - `offerService.js`: Gửi offer, danh sách offer, phản hồi accept/reject.
+  - `notificationService.js`: Danh sách thông báo, đếm chưa đọc, đánh dấu đã đọc.
+  - `companyService.js`: Công ty, địa điểm, ngành nghề, loại việc.
+  - `userService.js`: Danh sách user, tạo recruiter, khóa/mở khóa.
+  - `reviewService.js`: Đánh giá công ty, kiểm duyệt review.
+  - `fileService.js`: Upload file multipart `POST /api/files`.
+  - `profileService.js`: Lấy và cập nhật hồ sơ ứng viên `GET/PUT /api/profiles/me`.
+- [x] **Task 1.4:** Xây dựng Common UI Components:
+  - `ConfirmDialog`: Hộp thoại xác nhận hành động nguy hiểm (xóa tin, hủy đơn, khóa tài khoản).
+  - `Pagination`: Thanh phân trang chuẩn Spring Data `{ page, size, totalPages, totalElements }`.
+  - `Toast / Notification Bell`: Chuông thông báo thời gian thực & hệ thống Toast alert toàn cục.
+
+---
+
+### Phase 2: Cổng Người tìm việc (`/public`)
+*Mục tiêu: Đảm bảo khách và Job Seeker hoàn thành trọn vẹn quy trình tìm việc và nộp hồ sơ.*
+
+- [x] **Task 2.1 (U007, U006):** Trang danh sách việc làm (`/public` hoặc `/public/jobs`):
+  - Bộ lọc tìm kiếm: Từ khóa tiêu đề, Công ty, Ngành nghề (`industryId`), Loại việc (`jobTypeId`).
+  - Danh sách tin hiển thị dạng thẻ đẹp mắt, phân trang và sắp xếp theo ngày đăng/mức lương.
+- [x] **Task 2.2 (U008, U023):** Trang chi tiết tin tuyển dụng (`/public/jobs/:id`):
+  - Thông tin mô tả công việc, trách nhiệm, yêu cầu, quyền lợi, địa điểm, mức lương.
+  - Khối thông tin công ty và danh sách đánh giá của công ty (`ReviewResponse`).
+  - Nút "Ứng tuyển ngay" (mở modal hoặc form nộp CV).
+- [x] **Task 2.3 (U010):** Trang Hồ sơ cá nhân (`/public/profile`):
+  - Cập nhật số điện thoại, tóm tắt bản thân (`summary`), upload ảnh đại diện và tài liệu đính kèm.
+- [x] **Task 2.4 (U011):** Form ứng tuyển việc làm:
+  - Cho phép upload file CV (PDF/DOCX, tối đa 10MB) qua `fileService`.
+  - Nhập thư ngỏ (`coverLetter`), kiểm tra điều kiện tin còn hạn và `status = OPEN`.
+- [x] **Task 2.5 (U012):** Quản lý đơn ứng tuyển của tôi (`/public/my-applications`):
+  - Danh sách đơn kèm badge trạng thái: `APPLIED`, `SHORTLISTED`, `INTERVIEWING`, `OFFERED`, `REJECTED`.
+  - Nút "Rút đơn" (chỉ kích hoạt khi đơn ở trạng thái `APPLIED`) kèm hộp thoại xác nhận.
+- [x] **Task 2.6 (U018):** Chọn khung giờ phỏng vấn:
+  - Khi đơn được `SHORTLISTED`, mở danh sách khung giờ trống (`onlyFree=true`) để ứng viên chọn và book lịch (`POST /api/interview-slots/{id}/book`).
+- [x] **Task 2.7 (U021):** Xem và phản hồi Offer (`/public/my-offers`):
+  - Xem thông tin lương khởi điểm, ngày bắt đầu làm việc.
+  - Hai nút hành động: "Chấp nhận Offer" (`accept=true`) hoặc "Từ chối" (`accept=false`).
+- [x] **Task 2.8 (U023):** Viết đánh giá công ty (`ReviewModal`):
+  - Chọn số sao (1 đến 5 sao) và nhập nhận xét chân thực.
+
+---
+
+### Phase 3: Cổng Nhà tuyển dụng Doanh nghiệp (`/admin/recruiter`)
+*Mục tiêu: Giúp Recruiter quản lý tin, lọc CV và hoàn thiện vòng đời tuyển dụng.*
+
+- [x] **Task 3.1 (U004, U005, U006):** Quản lý tin tuyển dụng (`/admin/jobs`):
+  - Danh sách tin do recruiter đăng (lọc theo `status`: `OPEN`, `CLOSED`, `DRAFT`).
+  - Form tạo/sửa tin tuyển dụng: Validation tiêu đề, hạn nộp, mức lương, địa điểm trực thuộc công ty, mô tả công việc.
+  - Nút xóa tin (ngăn xóa nếu đã có đơn nộp, gợi ý chuyển sang `CLOSED`).
+- [x] **Task 3.2 (U013, U014):** Quản lý đơn ứng tuyển & Duyệt hồ sơ (`/admin/jobs/:jobId/applications`):
+  - Bảng danh sách ứng viên nộp đơn theo từng tin tuyển dụng, lọc theo trạng thái.
+  - Xem CV trực tuyến (nhúng PDF viewer hoặc link tải file) và xem chi tiết hồ sơ ứng viên.
+  - Cập nhật trạng thái ứng viên (Từ chối đơn `REJECTED`).
+- [x] **Task 3.3 (U015):** Danh sách rút gọn Shortlist (`/admin/shortlists`):
+  - Nút đưa ứng viên từ `APPLIED` vào Shortlist kèm ghi chú (`note`).
+  - Quản lý danh sách Shortlist, hủy đưa vào shortlist nếu cần.
+- [x] **Task 3.4 (U017, U019):** Quản lý phỏng vấn (`/admin/interviews`):
+  - Tạo khung giờ phỏng vấn: `startTime` (tương lai), `endTime`, `meetingLink`.
+  - Xem các slot đã được ứng viên đặt lịch.
+  - Form chấm điểm và ghi nhận feedback sau phỏng vấn (Điểm từ 1-10 kèm nhận xét).
+- [x] **Task 3.5 (U020):** Gửi Offer việc làm:
+  - Khi đơn đang ở trạng thái `INTERVIEWING`, mở form nhập mức lương (`salary > 0`) và ngày bắt đầu làm việc (`startDate`).
+  - Gửi Offer sang trạng thái `PENDING` và theo dõi phản hồi của ứng viên.
+
+---
+
+### Phase 4: Cổng Quản trị viên Toàn quyền (`/admin/system`)
+*Mục tiêu: Đảm bảo Admin kiểm soát toàn bộ người dùng, danh mục dữ liệu và nội dung cộng đồng.*
+
+- [x] **Task 4.1 (U016):** Quản lý người dùng (`/admin/users`):
+  - Xem danh sách người dùng kèm bộ lọc role (`ADMIN`, `RECRUITER`, `JOB_SEEKER`) và tìm kiếm.
+  - Form tạo tài khoản Nhà tuyển dụng (`RECRUITER`), gắn kết bắt buộc với một Công ty cụ thể.
+  - Nút Khóa / Mở khóa tài khoản (`PATCH /api/users/{id}/active`) kèm xác nhận (chặn tự khóa chính mình).
+- [x] **Task 4.2 (U002):** Quản lý Công ty & Địa điểm (`/admin/companies`):
+  - CRUD thông tin công ty: tên, mô tả, website, upload logo qua `fileService`.
+  - CRUD địa điểm làm việc trực thuộc công ty (`CompanyLocation`: thành phố, địa chỉ).
+- [x] **Task 4.3 (U003):** Quản lý Danh mục Ngành nghề & Loại hình công việc (`/admin/categories`):
+  - Quản lý Ngành nghề (`Industries`: Thêm, sửa tên, xóa).
+  - Quản lý Loại công việc (`Job Types`: Full-time, Part-time, Remote, Thực tập...).
+- [x] **Task 4.4 (U024):** Kiểm duyệt đánh giá công ty (`/admin/reviews`):
+  - Bảng danh sách review của người dùng, phân loại theo số sao và công ty.
+  - Nút xóa/ẩn các review vi phạm tiêu chuẩn cộng đồng (`DELETE /api/reviews/{id}`).
+
+---
+
+### Phase 5: Hệ thống Thông báo & Tối ưu Trải nghiệm (Cross-Cutting Features)
+
+- [x] **Task 5.1 (U022):** Chuông thông báo toàn hệ thống:
+  - Gọi `GET /api/notifications/unread-count` định kỳ (polling mỗi 30-60 giây hoặc khi đổi trang).
+  - Dropdown xem danh sách thông báo mới nhất.
+  - Đánh dấu đã đọc (`PATCH /api/notifications/{id}/read`) khi click vào thông báo.
+- [x] **Task 5.2:** Xử lý lỗi toàn cục & UX tương tác:
+  - Bắt lỗi `401 Unauthorized` tự động xóa token và chuyển về trang đăng nhập.
+  - Bắt lỗi `400 Validation` hiển thị text đỏ dưới đúng ô input từ `response.data.errors`.
+  - Bắt lỗi `409 Conflict` (nộp đơn trùng, slot đã đặt, xóa danh mục đang dùng...) hiển thị thông báo toast thân thiện.
+  - Giữ vững quy chuẩn thiết kế **Modern Clean Dashboard & Warm Minimal** đã thống nhất.
+
+---
+
+---
+
+## 4. Tổng kết hoàn thiện hệ thống
+
+Toàn bộ 5 Phase theo Product Backlog (24 User Stories U001–U024) đã được hiện thực hóa trọn vẹn:
+1. **Phase 1:** Core Infrastructure, REST API Services, Layouts, Route Guards, Toast & Dialog.
+2. **Phase 2:** Cổng Người tìm việc (`/public`, Chi tiết việc làm, Hồ sơ cá nhân, Nộp đơn, Rút đơn, Chọn slot phỏng vấn, Đánh giá và Phản hồi Offer).
+3. **Phase 3:** Cổng Tuyển dụng Doanh nghiệp (`/admin/jobs`, `/admin/applications`, `/admin/shortlists`, `/admin/interviews`, `/admin/offers`).
+4. **Phase 4:** Cổng Quản trị viên Toàn quyền (`/admin/users`, `/admin/companies`, `/admin/categories`, `/admin/reviews`).
+5. **Phase 5:** Chuông thông báo toàn hệ thống, Interceptor bắt lỗi 401/400/409, Toast cảnh báo và thiết kế chuẩn Modern Clean Dashboard & Warm Minimal.
+
+Hệ thống đã được kiểm thử, build production thành công và push đầy đủ lên nhánh `fe` trên GitHub repository.

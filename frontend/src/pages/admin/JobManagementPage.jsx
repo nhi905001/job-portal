@@ -1,113 +1,169 @@
-import React, { useState } from 'react';
-import { Briefcase, Plus, Search, Edit, Trash2 } from 'lucide-react';
+import React from 'react';
+import { Plus } from 'lucide-react';
+import { useJobs } from '../../hooks/useJobs';
+import Card from '../../components/common/Card';
+import Button from '../../components/common/Button';
+import Pagination from '../../components/common/Pagination';
+import ConfirmDialog from '../../components/common/ConfirmDialog';
+import { JobFilterBar, JobTable, JobFormModal } from '../../features/jobs';
 
 export default function JobManagementPage() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const {
+    user,
+    jobs,
+    page,
+    totalPages,
+    totalElements,
+    isLoading,
+    keyword,
+    statusFilter,
+    industryFilter,
+    jobTypeFilter,
+    companyFilter,
+    industries,
+    jobTypes,
+    locations,
+    companies,
+    jobModalOpen,
+    isEditing,
+    isSaving,
+    isLoadingDetail,
+    jobForm,
+    deleteDialogOpen,
+    jobToDelete,
+    isDeleting,
+    setPage,
+    setKeyword,
+    setStatusFilter,
+    setIndustryFilter,
+    setJobTypeFilter,
+    setCompanyFilter,
+    setJobModalOpen,
+    setDeleteDialogOpen,
+    handleOpenCreateModal,
+    handleOpenEditModal,
+    handleFormChange,
+    handleSaveJob,
+    handleOpenDelete,
+    handleConfirmDelete,
+    handleResetFilters,
+    refetchJobs,
+  } = useJobs();
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-[#1E1E1E] tracking-tight">
-            Quản lý Tin Tuyển Dụng
-          </h1>
-          <p className="text-xs text-[#8A8073] mt-1">
-            Đăng mới, chỉnh sửa, theo dõi trạng thái và hạn nộp của các vị trí tuyển dụng
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              Job Board
+            </h1>
+            <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[11px] font-bold border border-amber-200/60">
+              {user?.role === 'ADMIN' ? 'Admin Tuyển Dụng' : 'Nhà Tuyển Dụng'}
+            </span>
+          </div>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            Đăng tin tuyển dụng, kiểm soát trạng thái, chỉ định chi nhánh và theo dõi hồ sơ ứng tuyển theo thời gian thực.
           </p>
         </div>
-        <button
-          type="button"
-          className="px-4 py-2.5 bg-[#F6B779] hover:bg-[#EEA861] active:bg-[#E59C51] text-[#2C241E] text-xs font-semibold rounded-xl transition-all shadow-sm flex items-center gap-1.5 self-start sm:self-auto"
+
+        <Button
+          variant="primary"
+          size="md"
+          onClick={handleOpenCreateModal}
+          leftIcon={<Plus className="w-4 h-4 text-slate-950 stroke-[3]" />}
+          className="self-start sm:self-auto font-bold shadow-sm"
         >
-          <Plus className="w-4 h-4" />
-          <span>Tạo tin tuyển dụng mới</span>
-        </button>
+          Tạo tin tuyển dụng mới
+        </Button>
       </div>
 
-      {/* Filter and Search Bar */}
-      <div className="bg-white border border-[#EFE9DF] rounded-2xl p-4 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 text-[#9E9587] absolute left-3.5 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Tìm theo tiêu đề tin..."
-            className="w-full pl-9 pr-3.5 py-2 text-xs bg-[#FAF7F2] border border-[#E8E2D6] rounded-xl text-[#1E1E1E] placeholder:text-[#A8A196] focus:outline-none focus:border-[#F6B779] focus:ring-2 focus:ring-[#F6B779]/20"
+      {/* Filter Bar */}
+      <JobFilterBar
+        keyword={keyword}
+        statusFilter={statusFilter}
+        industryFilter={industryFilter}
+        jobTypeFilter={jobTypeFilter}
+        companyFilter={companyFilter}
+        industries={industries}
+        jobTypes={jobTypes}
+        companies={companies}
+        isAdmin={user?.role === 'ADMIN'}
+        totalElements={totalElements}
+        onKeywordChange={setKeyword}
+        onStatusChange={(s) => {
+          setStatusFilter(s);
+          setPage(0);
+        }}
+        onIndustryChange={(id) => {
+          setIndustryFilter(id);
+          setPage(0);
+        }}
+        onJobTypeChange={(id) => {
+          setJobTypeFilter(id);
+          setPage(0);
+        }}
+        onCompanyChange={(id) => {
+          setCompanyFilter(id);
+          setPage(0);
+        }}
+        onSearchSubmit={(e) => {
+          e.preventDefault();
+          setPage(0);
+          refetchJobs();
+        }}
+        onReset={handleResetFilters}
+      />
+
+      {/* Table Card */}
+      <Card className="shadow-card border-slate-200/90 rounded-2xl overflow-hidden bg-white">
+        <JobTable
+          jobs={jobs}
+          isLoading={isLoading}
+          onEditClick={handleOpenEditModal}
+          onDeleteClick={handleOpenDelete}
+        />
+
+        <div className="px-6 py-3 border-t border-slate-100 bg-slate-50/40">
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            totalElements={totalElements}
+            size={10}
+            onPageChange={(p) => setPage(p)}
           />
         </div>
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <select className="w-full sm:w-auto px-3 py-2 text-xs bg-[#FAF7F2] border border-[#E8E2D6] rounded-xl text-[#4A4135] focus:outline-none focus:border-[#F6B779]">
-            <option value="">Tất cả trạng thái</option>
-            <option value="OPEN">Đang tuyển (OPEN)</option>
-            <option value="CLOSED">Đã đóng (CLOSED)</option>
-            <option value="DRAFT">Bản nháp (DRAFT)</option>
-          </select>
-        </div>
-      </div>
+      </Card>
 
-      {/* Jobs Table */}
-      <div className="bg-white border border-[#EFE9DF] rounded-3xl overflow-hidden shadow-xs">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-[#FAF7F2]/80 border-b border-[#EFE9DF] text-[#786F62] font-semibold uppercase tracking-wider text-[11px]">
-              <tr>
-                <th className="px-5 py-3.5">Tiêu đề tin</th>
-                <th className="px-5 py-3.5">Loại việc / Ngành</th>
-                <th className="px-5 py-3.5">Mức lương (VND)</th>
-                <th className="px-5 py-3.5">Hạn nộp</th>
-                <th className="px-5 py-3.5">Trạng thái</th>
-                <th className="px-5 py-3.5 text-right">Thao tác</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#F4EFE6] text-[#4A4135]">
-              {[
-                {
-                  id: 1,
-                  title: 'Senior Frontend Developer (React)',
-                  type: 'Full-time',
-                  industry: 'CNTT',
-                  salary: '25M - 35M',
-                  deadline: '30/11/2026',
-                  status: 'OPEN',
-                },
-                {
-                  id: 2,
-                  title: 'Chuyên viên Tuyển dụng Doanh nghiệp',
-                  type: 'Full-time',
-                  industry: 'Nhân sự',
-                  salary: '15M - 20M',
-                  deadline: '25/11/2026',
-                  status: 'OPEN',
-                },
-              ].map((job) => (
-                <tr key={job.id} className="hover:bg-[#FAF7F2]/50 transition-colors">
-                  <td className="px-5 py-4 font-semibold text-[#1E1E1E]">{job.title}</td>
-                  <td className="px-5 py-4">
-                    <span className="text-[#4A4135]">{job.type}</span> • <span className="text-[#8A8073]">{job.industry}</span>
-                  </td>
-                  <td className="px-5 py-4 font-medium text-emerald-800">{job.salary}</td>
-                  <td className="px-5 py-4 text-[#786F62]">{job.deadline}</td>
-                  <td className="px-5 py-4">
-                    <span className="px-2.5 py-0.5 rounded-full font-semibold text-[11px] bg-emerald-50 text-emerald-800 border border-emerald-200">
-                      {job.status}
-                    </span>
-                  </td>
-                  <td className="px-5 py-4 text-right space-x-2">
-                    <button type="button" className="p-1 text-[#8A8073] hover:text-[#1E1E1E] transition-colors" title="Chỉnh sửa">
-                      <Edit className="w-4 h-4" />
-                    </button>
-                    <button type="button" className="p-1 text-[#8A8073] hover:text-rose-600 transition-colors" title="Xóa tin">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      {/* Job Form Modal */}
+      <JobFormModal
+        isOpen={jobModalOpen}
+        isEditing={isEditing}
+        formData={jobForm}
+        industries={industries}
+        jobTypes={jobTypes}
+        locations={locations}
+        companies={companies}
+        user={user}
+        isSaving={isSaving}
+        isLoadingDetail={isLoadingDetail}
+        onClose={() => setJobModalOpen(false)}
+        onChange={handleFormChange}
+        onSubmit={handleSaveJob}
+      />
+
+      {/* Confirm Delete Dialog */}
+      <ConfirmDialog
+        isOpen={deleteDialogOpen}
+        title="Xóa Tin Tuyển Dụng"
+        message={`Bạn có chắc chắn muốn xóa tin tuyển dụng "${jobToDelete?.title}" không? Lưu ý: Tin tuyển dụng đã có người nộp đơn sẽ không thể xóa (hãy chuyển sang trạng thái ĐÃ ĐÓNG thay vì xóa).`}
+        confirmText="Xác nhận xóa"
+        confirmVariant="danger"
+        isLoading={isDeleting}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteDialogOpen(false)}
+      />
     </div>
   );
 }

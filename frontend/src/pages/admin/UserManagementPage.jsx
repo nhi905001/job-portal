@@ -1,71 +1,123 @@
 import React from 'react';
-import { Users, UserPlus } from 'lucide-react';
+import { UserPlus } from 'lucide-react';
+import { useUsers } from '../../hooks/useUsers';
+import Card from '../../components/common/Card';
+import Button from '../../components/common/Button';
+import Pagination from '../../components/common/Pagination';
+import ConfirmDialog from '../../components/common/ConfirmDialog';
+import { UserFilterBar, UserTable, CreateUserModal } from '../../features/users';
 
 export default function UserManagementPage() {
+  const {
+    currentUser,
+    users,
+    page,
+    totalPages,
+    totalElements,
+    isLoading,
+    roleFilter,
+    keyword,
+    companies,
+    createModalOpen,
+    userForm,
+    isSubmitting,
+    toggleDialogOpen,
+    userToToggle,
+    isToggling,
+    setPage,
+    setRoleFilter,
+    setKeyword,
+    setCreateModalOpen,
+    setToggleDialogOpen,
+    handleSearchSubmit,
+    handleOpenCreateModal,
+    handleFormChange,
+    handleCreateUserSubmit,
+    handleOpenToggleDialog,
+    handleConfirmToggleActive,
+  } = useUsers();
+
   return (
     <div className="space-y-6">
+      {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-[#1E1E1E] tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
             Quản Lý Người Dùng & Phân Quyền
           </h1>
-          <p className="text-xs text-[#8A8073] mt-1">
-            Tạo tài khoản nhà tuyển dụng (Recruiter), phân quyền và khóa/mở khóa tài khoản người dùng
+          <p className="text-xs text-slate-500 mt-1">
+            Quản lý tài khoản Admin, Nhà tuyển dụng (Recruiter) và Ứng viên (Job Seeker)
           </p>
         </div>
-        <button
-          type="button"
-          className="px-4 py-2.5 bg-[#F6B779] hover:bg-[#EEA861] active:bg-[#E59C51] text-[#2C241E] text-xs font-semibold rounded-xl transition-all shadow-sm flex items-center gap-1.5 self-start sm:self-auto"
+
+        <Button
+          variant="primary"
+          size="md"
+          onClick={handleOpenCreateModal}
+          leftIcon={<UserPlus className="w-4 h-4" />}
+          className="self-start sm:self-auto"
         >
-          <UserPlus className="w-4 h-4" />
-          <span>Tạo tài khoản Recruiter</span>
-        </button>
+          Tạo tài khoản mới
+        </Button>
       </div>
 
-      <div className="bg-white border border-[#EFE9DF] rounded-3xl overflow-hidden shadow-xs">
-        <table className="w-full text-left text-xs">
-          <thead className="bg-[#FAF7F2]/80 border-b border-[#EFE9DF] text-[#786F62] font-semibold uppercase tracking-wider text-[11px]">
-            <tr>
-              <th className="px-5 py-3.5">Họ và tên</th>
-              <th className="px-5 py-3.5">Email</th>
-              <th className="px-5 py-3.5">Vai trò (Role)</th>
-              <th className="px-5 py-3.5">Doanh nghiệp gắn kèm</th>
-              <th className="px-5 py-3.5">Trạng thái</th>
-              <th className="px-5 py-3.5 text-right">Khóa / Mở</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#F4EFE6] text-[#4A3E31]">
-            {[
-              { id: 1, name: 'Quản trị viên', email: 'admin@jobportal.com', role: 'ADMIN', company: '—', active: true },
-              { id: 2, name: 'FPT Recruiter', email: 'recruiter@fpt.com', role: 'RECRUITER', company: 'FPT Software', active: true },
-              { id: 3, name: 'Ứng viên Tìm việc', email: 'seeker@gmail.com', role: 'JOB_SEEKER', company: '—', active: true },
-            ].map((u) => (
-              <tr key={u.id} className="hover:bg-[#FAF7F2]/50 transition-colors">
-                <td className="px-5 py-4 font-semibold text-[#1E1E1E]">{u.name}</td>
-                <td className="px-5 py-4 text-[#786F62]">{u.email}</td>
-                <td className="px-5 py-4">
-                  <span className="font-mono text-[11px] font-semibold px-2 py-0.5 rounded-lg bg-[#FAF7F2] border border-[#E8E2D6] text-[#4A3E31]">
-                    {u.role}
-                  </span>
-                </td>
-                <td className="px-5 py-4 font-medium text-[#1E1E1E]">{u.company}</td>
-                <td className="px-5 py-4">
-                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                    Hoạt động
-                  </span>
-                </td>
-                <td className="px-5 py-4 text-right">
-                  {u.role !== 'ADMIN' && (
-                    <button type="button" className="px-2.5 py-1 text-xs text-rose-600 hover:bg-rose-50 border border-rose-200 rounded-xl transition-colors">
-                      Khóa tài khoản
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {/* Filter Bar */}
+      <UserFilterBar
+        keyword={keyword}
+        roleFilter={roleFilter}
+        totalElements={totalElements}
+        onKeywordChange={setKeyword}
+        onRoleChange={(r) => {
+          setRoleFilter(r);
+          setPage(0);
+        }}
+        onSearchSubmit={handleSearchSubmit}
+      />
+
+      {/* Table Card */}
+      <Card className="shadow-card border-slate-200/90 rounded-2xl overflow-hidden bg-white">
+        <UserTable
+          users={users}
+          isLoading={isLoading}
+          currentUserId={currentUser?.id}
+          onToggleActive={handleOpenToggleDialog}
+        />
+
+        <div className="px-4 py-2 border-t border-slate-100 bg-slate-50/50">
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            totalElements={totalElements}
+            size={10}
+            onPageChange={(p) => setPage(p)}
+          />
+        </div>
+      </Card>
+
+      {/* Create User Modal */}
+      <CreateUserModal
+        isOpen={createModalOpen}
+        onClose={() => setCreateModalOpen(false)}
+        companies={companies}
+        formData={userForm}
+        isSubmitting={isSubmitting}
+        onChange={handleFormChange}
+        onSubmit={handleCreateUserSubmit}
+      />
+
+      {/* Toggle Active Confirm Dialog */}
+      <ConfirmDialog
+        isOpen={toggleDialogOpen}
+        title={userToToggle?.active ? 'Khóa Tài Khoản Người Dùng' : 'Mở Khóa Tài Khoản Người Dùng'}
+        message={`Bạn có chắc chắn muốn ${
+          userToToggle?.active ? 'KHÓA' : 'MỞ KHÓA'
+        } tài khoản "${userToToggle?.fullName}" (${userToToggle?.email}) không?`}
+        confirmText={userToToggle?.active ? 'Khóa tài khoản' : 'Mở khóa tài khoản'}
+        confirmVariant={userToToggle?.active ? 'danger' : 'primary'}
+        isLoading={isToggling}
+        onConfirm={handleConfirmToggleActive}
+        onCancel={() => setToggleDialogOpen(false)}
+      />
     </div>
   );
 }

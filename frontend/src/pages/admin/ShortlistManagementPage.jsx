@@ -1,47 +1,84 @@
 import React from 'react';
-import { CheckSquare } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Calendar } from 'lucide-react';
+import { useShortlists } from '../../hooks/useShortlists';
+import Card from '../../components/common/Card';
+import Button from '../../components/common/Button';
+import Pagination from '../../components/common/Pagination';
+import ConfirmDialog from '../../components/common/ConfirmDialog';
+import { ShortlistTable } from '../../features/shortlists';
 
 export default function ShortlistManagementPage() {
+  const {
+    shortlists,
+    page,
+    totalPages,
+    totalElements,
+    isLoading,
+    deleteDialogOpen,
+    itemToDelete,
+    isDeleting,
+    setPage,
+    handleOpenDelete,
+    handleCloseDelete,
+    handleConfirmDelete,
+  } = useShortlists();
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-xl sm:text-2xl font-bold text-[#1E1E1E] tracking-tight">
-          Danh Sách Shortlist (Ứng Viên Rút Gọn)
-        </h1>
-        <p className="text-xs text-[#8A8073] mt-1">
-          Các ứng viên đã vượt qua vòng lọc hồ sơ ban đầu và sẵn sàng bước vào vòng phỏng vấn
-        </p>
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+            Danh Sách Shortlist (Ứng Viên Tiềm Năng)
+          </h1>
+          <p className="text-xs text-slate-500 mt-1">
+            Các ứng viên đã vượt qua vòng lọc hồ sơ ban đầu và sẵn sàng bước vào vòng phỏng vấn
+          </p>
+        </div>
+
+        <Link to="/admin/interviews">
+          <Button
+            variant="primary"
+            size="md"
+            leftIcon={<Calendar className="w-4 h-4" />}
+            className="self-start sm:self-auto"
+          >
+            Quản lý lịch phỏng vấn
+          </Button>
+        </Link>
       </div>
 
-      <div className="bg-white border border-[#EFE9DF] rounded-3xl overflow-hidden shadow-xs">
-        <table className="w-full text-left text-xs">
-          <thead className="bg-[#FAF7F2]/80 border-b border-[#EFE9DF] text-[#786F62] font-semibold uppercase tracking-wider text-[11px]">
-            <tr>
-              <th className="px-5 py-3.5">Ứng viên</th>
-              <th className="px-5 py-3.5">Vị trí</th>
-              <th className="px-5 py-3.5">Ghi chú tuyển dụng</th>
-              <th className="px-5 py-3.5">Ngày đưa vào</th>
-              <th className="px-5 py-3.5 text-right">Thao tác</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#F4EFE6] text-[#4A3E31]">
-            <tr className="hover:bg-[#FAF7F2]/50 transition-colors">
-              <td className="px-5 py-4 font-semibold text-[#1E1E1E]">
-                Trần Thị B
-                <span className="text-[#8A8073] font-normal block text-[11px]">tranb@gmail.com</span>
-              </td>
-              <td className="px-5 py-4">Senior Frontend Developer (React)</td>
-              <td className="px-5 py-4 text-[#786F62]">CV tốt, kinh nghiệm 4 năm React & Next.js</td>
-              <td className="px-5 py-4 text-[#8A8073]">08/10/2026</td>
-              <td className="px-5 py-4 text-right">
-                <button type="button" className="text-rose-600 hover:text-rose-800 font-medium transition-colors">
-                  Xóa khỏi Shortlist
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      {/* Table Card */}
+      <Card className="shadow-card border-slate-200/90 rounded-2xl overflow-hidden bg-white">
+        <ShortlistTable
+          shortlists={shortlists}
+          isLoading={isLoading}
+          onDeleteClick={handleOpenDelete}
+        />
+
+        <div className="px-4 py-2 border-t border-slate-100 bg-slate-50/50">
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            totalElements={totalElements}
+            size={10}
+            onPageChange={(p) => setPage(p)}
+          />
+        </div>
+      </Card>
+
+      {/* Confirm Dialog */}
+      <ConfirmDialog
+        isOpen={deleteDialogOpen}
+        title="Xóa khỏi Shortlist"
+        message={`Bạn có chắc chắn muốn xóa ứng viên "${itemToDelete?.jobApplication?.candidate?.fullName || itemToDelete?.application?.user?.fullName || 'này'}" khỏi danh sách Shortlist không?`}
+        confirmText="Xác nhận xóa"
+        confirmVariant="danger"
+        isLoading={isDeleting}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCloseDelete}
+      />
     </div>
   );
 }

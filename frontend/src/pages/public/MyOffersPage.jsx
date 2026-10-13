@@ -1,84 +1,90 @@
 import React from 'react';
-import { Gift, Building2, Calendar, DollarSign, Check, X } from 'lucide-react';
+import { Gift, Loader2 } from 'lucide-react';
+import { useMyOffers } from '../../hooks/useMyOffers';
+import Pagination from '../../components/common/Pagination';
+import ConfirmDialog from '../../components/common/ConfirmDialog';
+import { MyOfferCard } from '../../features/offers';
 
 export default function MyOffersPage() {
-  const mockOffers = [
-    {
-      id: 1,
-      jobTitle: 'Senior Frontend Developer (React)',
-      company: 'FPT Software',
-      salary: '32.000.000 VND / tháng',
-      startDate: '01/11/2026',
-      status: 'PENDING',
-      statusLabel: 'Chờ phản hồi',
-      statusColor: 'bg-amber-50 text-amber-800 border-amber-200',
-    },
-  ];
+  const {
+    offers,
+    page,
+    totalPages,
+    totalElements,
+    isLoading,
+    confirmDialogOpen,
+    selectedOffer,
+    respondAction,
+    isResponding,
+    setPage,
+    handleOpenRespondDialog,
+    handleCloseRespondDialog,
+    handleConfirmResponse,
+  } = useMyOffers();
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <div className="border-b border-[#EFE9DF] pb-4">
-        <h1 className="text-xl sm:text-2xl font-bold text-[#1E1E1E]">Thư mời nhận việc (Offers)</h1>
-        <p className="text-xs text-[#8A8073] mt-1">
-          Xem xét các lời mời làm việc chính thức từ nhà tuyển dụng và phản hồi kịp thời
+      {/* Header */}
+      <div>
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+          Thư Mời Nhận Việc (My Offers)
+        </h1>
+        <p className="text-xs text-slate-500 mt-1">
+          Xem thông tin mức lương và thời hạn làm việc để đưa ra quyết định phản hồi nhà tuyển dụng
         </p>
       </div>
 
-      <div className="space-y-4">
-        {mockOffers.map((offer) => (
-          <div
-            key={offer.id}
-            className="bg-white border border-[#EFE9DF] rounded-3xl p-6 sm:p-8 shadow-xs"
-          >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#F4EFE6] pb-4 mb-4">
-              <div>
-                <span className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${offer.statusColor}`}>
-                  {offer.statusLabel}
-                </span>
-                <h3 className="text-lg font-bold text-[#1E1E1E] mt-2">{offer.jobTitle}</h3>
-                <p className="text-xs text-[#786F62] flex items-center gap-1.5 mt-1">
-                  <Building2 className="w-3.5 h-3.5 text-[#A89E90]" />
-                  <span>{offer.company}</span>
-                </p>
-              </div>
+      {/* Offers List */}
+      {isLoading ? (
+        <div className="py-16 text-center text-slate-500">
+          <Loader2 className="w-8 h-8 animate-spin text-slate-800 mx-auto mb-2" />
+          <span className="text-xs">Đang tải danh sách Offer...</span>
+        </div>
+      ) : offers.length === 0 ? (
+        <div className="py-16 text-center bg-white border border-slate-200 rounded-2xl p-8">
+          <Gift className="w-10 h-10 text-slate-400 mx-auto mb-3" />
+          <h3 className="text-sm font-bold text-slate-900">Bạn chưa nhận được Offer nào</h3>
+          <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+            Khi nhà tuyển dụng hoàn tất vòng phỏng vấn và gửi lời mời gia nhập, thư mời nhận việc sẽ hiển thị tại đây.
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {offers.map((offer) => (
+            <MyOfferCard
+              key={offer.id}
+              offer={offer}
+              onRespond={handleOpenRespondDialog}
+            />
+          ))}
 
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl transition-all shadow-sm flex items-center gap-1.5"
-                >
-                  <Check className="w-4 h-4" />
-                  <span>Chấp nhận Offer</span>
-                </button>
-                <button
-                  type="button"
-                  className="px-4 py-2.5 bg-white hover:bg-rose-50 text-rose-600 border border-rose-200 text-xs font-semibold rounded-xl transition-colors flex items-center gap-1.5"
-                >
-                  <X className="w-4 h-4" />
-                  <span>Từ chối</span>
-                </button>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-              <div className="p-3 bg-[#FAF7F2] rounded-xl flex items-center gap-2">
-                <DollarSign className="w-4 h-4 text-emerald-600" />
-                <div>
-                  <span className="text-[#8A8073] block">Mức lương đề xuất:</span>
-                  <span className="font-bold text-[#1E1E1E]">{offer.salary}</span>
-                </div>
-              </div>
-              <div className="p-3 bg-[#FAF7F2] rounded-xl flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-blue-600" />
-                <div>
-                  <span className="text-[#8A8073] block">Ngày bắt đầu làm việc:</span>
-                  <span className="font-bold text-[#1E1E1E]">{offer.startDate}</span>
-                </div>
-              </div>
-            </div>
+          <div className="bg-white border border-slate-200 rounded-xl px-4 py-2 mt-4">
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              totalElements={totalElements}
+              size={10}
+              onPageChange={(p) => setPage(p)}
+            />
           </div>
-        ))}
-      </div>
+        </div>
+      )}
+
+      {/* Confirm Dialog */}
+      <ConfirmDialog
+        isOpen={confirmDialogOpen}
+        title={respondAction ? 'Chấp Nhận Lời Mời Nhận Việc' : 'Từ Chối Lời Mời Nhận Việc'}
+        message={
+          respondAction
+            ? `Bạn có chắc chắn muốn CHẤP NHẬN Offer cho vị trí "${selectedOffer?.application?.jobListing?.title}" với mức lương đề xuất không?`
+            : `Bạn có chắc chắn muốn TỪ CHỐI Offer từ "${selectedOffer?.application?.jobListing?.company?.name}"? Quyết định này không thể hoàn tác.`
+        }
+        confirmText={respondAction ? 'Chấp nhận Offer' : 'Từ chối Offer'}
+        confirmVariant={respondAction ? 'primary' : 'danger'}
+        isLoading={isResponding}
+        onConfirm={handleConfirmResponse}
+        onCancel={handleCloseRespondDialog}
+      />
     </div>
   );
 }
