@@ -22,6 +22,11 @@ const STATUS_CONFIG = {
     className: 'bg-slate-50 text-slate-600 border-slate-200',
     icon: <AlertCircle className="w-3.5 h-3.5 text-slate-500 shrink-0" />,
   },
+  CANCELLED: {
+    label: 'Đã hủy',
+    className: 'bg-slate-100 text-slate-700 border-slate-300',
+    icon: <XCircle className="w-3.5 h-3.5 text-slate-500 shrink-0" />,
+  },
 };
 
 export default function OfferStatusBadge({ status }) {

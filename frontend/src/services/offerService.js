@@ -39,6 +39,22 @@ const offerService = {
       params: { accept },
     });
   },
+
+  /**
+   * Recruiter hủy Offer đang chờ phản hồi (PENDING)
+   * @param {number|string} id
+   */
+  cancelOffer: async (id) => {
+    return await axiosClient.patch(`/api/offers/${id}/cancel`);
+  },
+
+  /**
+   * Recruiter xóa Offer khỏi hệ thống
+   * @param {number|string} id
+   */
+  deleteOffer: async (id) => {
+    return await axiosClient.delete(`/api/offers/${id}`);
+  },
 };
 
 export default offerService;

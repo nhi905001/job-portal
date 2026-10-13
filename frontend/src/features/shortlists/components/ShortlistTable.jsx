@@ -3,8 +3,11 @@ import { Link } from 'react-router-dom';
 import { CheckSquare, FileText, ExternalLink, Loader2, Trash2 } from 'lucide-react';
 import fileService from '../../../services/fileService';
 import { formatDate } from '../../../utils/formatters';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function ShortlistTable({ shortlists, isLoading, onDeleteClick }) {
+  const { user } = useAuth();
+  const isRecruiter = user?.role === 'RECRUITER';
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-left text-xs">
@@ -92,14 +95,19 @@ export default function ShortlistTable({ shortlists, isLoading, onDeleteClick })
                   </td>
 
                   <td className="px-5 py-4 text-right">
-                    <button
-                      type="button"
-                      onClick={() => onDeleteClick(item)}
-                      className="px-2.5 py-1 text-rose-600 hover:bg-rose-50 border border-rose-200 text-xs font-medium rounded-lg transition-colors inline-flex items-center gap-1"
-                    >
-                      <Trash2 className="w-3 h-3" />
-                      <span>Xóa</span>
-                    </button>
+                    {isRecruiter ? (
+                      <button
+                        type="button"
+                        onClick={() => onDeleteClick(item)}
+                        className="px-2.5 py-1 text-rose-600 hover:bg-rose-50 border border-rose-200 text-xs font-medium rounded-lg transition-colors inline-flex items-center gap-1"
+                        title="Xóa khỏi Shortlist"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                        <span>Xóa</span>
+                      </button>
+                    ) : (
+                      <span className="text-[11px] text-slate-400 italic">Chỉ xem</span>
+                    )}
                   </td>
                 </tr>
               );

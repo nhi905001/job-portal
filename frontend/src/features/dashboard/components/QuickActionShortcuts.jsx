@@ -21,8 +21,12 @@ export default function QuickActionShortcuts({ isAdmin }) {
           <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-900 flex items-center justify-center mb-2.5 transition-transform group-hover:scale-105">
             <FileText className="w-4 h-4" />
           </div>
-          <span className="font-bold text-slate-900 block group-hover:text-amber-900 transition-colors">Duyệt Đơn Ứng Tuyển</span>
-          <span className="text-[11px] text-slate-400 mt-0.5 block">Xem hồ sơ & lọc trạng thái</span>
+          <span className="font-bold text-slate-900 block group-hover:text-amber-900 transition-colors">
+            {isAdmin ? 'Theo Dõi Đơn Ứng Tuyển' : 'Duyệt Đơn Ứng Tuyển'}
+          </span>
+          <span className="text-[11px] text-slate-400 mt-0.5 block">
+            {isAdmin ? 'Giám sát hồ sơ & trạng thái' : 'Xem hồ sơ & lọc trạng thái'}
+          </span>
         </Link>
 
         <Link
@@ -32,8 +36,12 @@ export default function QuickActionShortcuts({ isAdmin }) {
           <div className="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-900 flex items-center justify-center mb-2.5 transition-transform group-hover:scale-105">
             <Calendar className="w-4 h-4" />
           </div>
-          <span className="font-bold text-slate-900 block group-hover:text-amber-900 transition-colors">Lên Lịch Phỏng Vấn</span>
-          <span className="text-[11px] text-slate-400 mt-0.5 block">Tạo slot & chấm feedback</span>
+          <span className="font-bold text-slate-900 block group-hover:text-amber-900 transition-colors">
+            {isAdmin ? 'Lịch Phỏng Vấn Hệ Thống' : 'Lên Lịch Phỏng Vấn'}
+          </span>
+          <span className="text-[11px] text-slate-400 mt-0.5 block">
+            {isAdmin ? 'Theo dõi lịch phỏng vấn' : 'Tạo slot & chấm feedback'}
+          </span>
         </Link>
 
         {isAdmin ? (

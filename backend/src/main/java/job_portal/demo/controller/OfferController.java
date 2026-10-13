@@ -30,10 +30,10 @@ public class OfferController {
 
 	private final OfferService offerService;
 
-	// POST /api/offers : recruiter gửi offer
+	// POST /api/offers : recruiter gửi offer. Admin không có quyền gửi offer.
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	@PreAuthorize("hasAnyRole('RECRUITER','ADMIN')")
+	@PreAuthorize("hasRole('RECRUITER')")
 	public Offer create(@Valid @RequestBody OfferRequest request, @AuthenticationPrincipal User user) {
 		return offerService.create(request, user);
 	}
@@ -64,5 +64,20 @@ public class OfferController {
 	@PreAuthorize("hasRole('JOB_SEEKER')")
 	public Offer respond(@PathVariable Long id, @RequestParam boolean accept, @AuthenticationPrincipal User user) {
 		return offerService.respond(id, accept, user);
+	}
+
+	// PATCH /api/offers/3/cancel : recruiter hủy offer (chuyển sang CANCELLED)
+	@PatchMapping("/{id}/cancel")
+	@PreAuthorize("hasRole('RECRUITER')")
+	public Offer cancel(@PathVariable Long id, @AuthenticationPrincipal User user) {
+		return offerService.cancel(id, user);
+	}
+
+	// DELETE /api/offers/3 : recruiter xóa offer khỏi hệ thống
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PreAuthorize("hasRole('RECRUITER')")
+	public void delete(@PathVariable Long id, @AuthenticationPrincipal User user) {
+		offerService.delete(id, user);
 	}
 }

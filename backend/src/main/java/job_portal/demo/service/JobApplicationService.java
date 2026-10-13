@@ -79,14 +79,13 @@ public class JobApplicationService {
 		return applicationRepository.search(jobListingId, status, recruiterId, pageable);
 	}
 
-	// Hàm cũ: recruiter đổi trạng thái đơn. Kiểm tra quyền xong thì giao việc cho
-	// changeStatus.
+	// Recruiter đổi trạng thái đơn (ví dụ từ chối đơn). Admin không có quyền thực hiện.
 	public JobApplication updateStatus(Long id, ApplicationStatus status, User user) {
 		JobApplication application = getById(id);
 
-		boolean isAdmin = user.getRole() == Role.ADMIN;
-		boolean isOwner = application.getJobListing().getRecruiter().getId().equals(user.getId());
-		if (!isAdmin && !isOwner) {
+		boolean isOwner = user.getRole() == Role.RECRUITER
+				&& application.getJobListing().getRecruiter().getId().equals(user.getId());
+		if (!isOwner) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
 					"You can only manage applications of your own jobs");
 		}

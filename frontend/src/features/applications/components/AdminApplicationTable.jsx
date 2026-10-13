@@ -3,6 +3,7 @@ import { FileText, Eye, CheckSquare, XCircle, ExternalLink, Loader2 } from 'luci
 import ApplicationStatusBadge from './ApplicationStatusBadge';
 import fileService from '../../../services/fileService';
 import { formatDate } from '../../../utils/formatters';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function AdminApplicationTable({
   applications,
@@ -11,6 +12,8 @@ export default function AdminApplicationTable({
   onShortlist,
   onReject,
 }) {
+  const { user } = useAuth();
+  const isRecruiter = user?.role === 'RECRUITER';
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-left text-xs">
@@ -90,7 +93,7 @@ export default function AdminApplicationTable({
                     >
                       <Eye className="w-3.5 h-3.5" />
                     </button>
-                    {app.status === 'APPLIED' && (
+                    {isRecruiter && app.status === 'APPLIED' && (
                       <button
                         type="button"
                         onClick={() => onShortlist(app)}
@@ -101,7 +104,7 @@ export default function AdminApplicationTable({
                         <span>Shortlist</span>
                       </button>
                     )}
-                    {app.status !== 'REJECTED' && (
+                    {isRecruiter && app.status !== 'REJECTED' && (
                       <button
                         type="button"
                         onClick={() => onReject(app)}

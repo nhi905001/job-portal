@@ -53,10 +53,10 @@ export default function CreateOfferModal({
             <div className="py-8 px-4 text-center text-slate-600 bg-slate-50 rounded-xl border border-slate-200">
               <AlertCircle className="w-8 h-8 text-amber-500 mx-auto mb-2" />
               <p className="text-xs font-semibold text-slate-800">
-                Chưa có ứng viên ở trạng thái INTERVIEWING
+                Chưa có ứng viên đủ điều kiện nhận Offer
               </p>
               <p className="text-[11px] text-slate-500 mt-1 max-w-xs mx-auto">
-                Theo quy trình hệ thống, ứng viên phải đang tham gia phỏng vấn mới có thể nhận Offer.
+                Theo quy trình hệ thống, ứng viên cần được Shortlist hoặc đang tham gia Phỏng vấn mới có thể nhận Offer.
               </p>
               <Button variant="outline" size="sm" onClick={onClose} className="mt-4">
                 Đóng lại

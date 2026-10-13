@@ -64,9 +64,9 @@ public class JobApplicationController {
 	}
 
 	// PATCH /api/applications/5/status?value=REJECTED : recruiter đổi trạng thái
-	// đơn
+	// đơn (từ chối đơn). Admin không có quyền thực hiện nghiệp vụ này.
 	@PatchMapping("/{id}/status")
-	@PreAuthorize("hasAnyRole('RECRUITER','ADMIN')")
+	@PreAuthorize("hasRole('RECRUITER')")
 	public JobApplication updateStatus(@PathVariable Long id, @RequestParam("value") ApplicationStatus value,
 			@AuthenticationPrincipal User user) {
 		return applicationService.updateStatus(id, value, user);
