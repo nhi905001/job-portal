@@ -1,6 +1,7 @@
 import React from 'react';
 import { Calendar, Clock, Video, Star, Trash2, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { formatDate } from '../../../utils/formatters';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function InterviewSlotTable({
   slots,
@@ -8,6 +9,8 @@ export default function InterviewSlotTable({
   onFeedbackClick,
   onDeleteClick,
 }) {
+  const { user } = useAuth();
+  const isRecruiter = user?.role === 'RECRUITER';
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-left text-xs">
@@ -102,27 +105,31 @@ export default function InterviewSlotTable({
                   </td>
 
                   <td className="px-5 py-4 text-right">
-                    <div className="flex items-center justify-end gap-1.5">
-                      {isBooked && (
+                    {isRecruiter ? (
+                      <div className="flex items-center justify-end gap-1.5">
+                        {isBooked && (
+                          <button
+                            type="button"
+                            onClick={() => onFeedbackClick(slot)}
+                            className="px-2 py-1 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg border border-slate-200 inline-flex items-center gap-1 font-medium"
+                            title="Đánh giá sau phỏng vấn"
+                          >
+                            <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                            <span>Đánh giá</span>
+                          </button>
+                        )}
                         <button
                           type="button"
-                          onClick={() => onFeedbackClick(slot)}
-                          className="px-2 py-1 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg border border-slate-200 inline-flex items-center gap-1 font-medium"
-                          title="Đánh giá sau phỏng vấn"
+                          onClick={() => onDeleteClick(slot)}
+                          className="p-1.5 text-rose-600 hover:text-rose-800 hover:bg-rose-50 rounded-lg border border-rose-200"
+                          title="Xóa khung giờ"
                         >
-                          <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
-                          <span>Đánh giá</span>
+                          <Trash2 className="w-3.5 h-3.5" />
                         </button>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => onDeleteClick(slot)}
-                        className="p-1.5 text-rose-600 hover:text-rose-800 hover:bg-rose-50 rounded-lg border border-rose-200"
-                        title="Xóa khung giờ"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
+                      </div>
+                    ) : (
+                      <span className="text-[11px] text-slate-400 italic">Chỉ xem</span>
+                    )}
                   </td>
                 </tr>
               );

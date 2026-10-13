@@ -107,37 +107,39 @@ Recruiter muốn xem tin của mình: gọi `GET /api/job-listings?recruiterId=<
 | `GET /api/applications/my` | `JOB_SEEKER` | page, size, sortBy, sortDir (mặc định `desc`) | Page đơn của tôi |
 | `DELETE /api/applications/{id}` | `JOB_SEEKER` (chủ đơn) | | 204. Chỉ rút được khi đơn đang `APPLIED`, ngược lại 409 |
 | `GET /api/applications` | RECRUITER, ADMIN | `jobListingId`, `status`, page, size, sortBy, sortDir | Page. Recruiter chỉ thấy đơn của tin do mình đăng |
-| `PATCH /api/applications/{id}/status?value=REJECTED` | Chủ tin hoặc ADMIN | | JobApplication |
+| `PATCH /api/applications/{id}/status?value=REJECTED` | RECRUITER (chủ tin) | | JobApplication |
 
 ### 5.6 Shortlist
 
-Chỉ RECRUITER và ADMIN. Ứng viên không gọi được.
+Chỉ RECRUITER (chủ tin) có quyền thêm hoặc xóa. ADMIN chỉ xem danh sách. Ứng viên không gọi được.
 
 | API | Body / tham số | Trả về |
 |---|---|---|
-| `POST /api/shortlists` | `{ applicationId, note }`. Đơn phải đang `APPLIED`, nếu không → 409. Đơn tự chuyển thành `SHORTLISTED` | 201 Shortlist |
-| `GET /api/shortlists` | page, size, sortBy, sortDir | Page. Recruiter chỉ thấy của mình |
-| `DELETE /api/shortlists/{id}` | | 204, đơn quay về `APPLIED`. Nếu đơn đã đi xa hơn → 409 |
+| `POST /api/shortlists` | `{ applicationId, note }`. Đơn phải đang `APPLIED`, nếu không → 409. Đơn tự chuyển thành `SHORTLISTED` (Chỉ RECRUITER) | 201 Shortlist |
+| `GET /api/shortlists` | page, size, sortBy, sortDir | Page. Recruiter chỉ thấy của mình, Admin thấy tất cả |
+| `DELETE /api/shortlists/{id}` | | 204, đơn quay về `APPLIED`. Nếu đơn đã đi xa hơn → 409 (Chỉ RECRUITER) |
 
 ### 5.7 Phỏng vấn
 
 | API | Quyền | Tham số / body | Trả về |
 |---|---|---|---|
 | `GET /api/interview-slots` | Đã đăng nhập | `jobListingId`, `onlyFree`, page, size, sortBy (mặc định `startTime`), sortDir | Page InterviewSlot. `JOB_SEEKER` luôn chỉ thấy slot còn trống. RECRUITER chỉ thấy slot của tin mình |
-| `POST /api/interview-slots` | RECRUITER, ADMIN | `{ jobListingId, startTime, endTime, meetingLink }`. `startTime` phải ở tương lai, `endTime` sau `startTime` | 201 |
+| `POST /api/interview-slots` | RECRUITER (chủ tin) | `{ jobListingId, startTime, endTime, meetingLink }`. `startTime` phải ở tương lai, `endTime` sau `startTime` | 201 |
 | `POST /api/interview-slots/{id}/book` | `JOB_SEEKER` | `{ applicationId }`. Đơn phải của mình, cùng tin với slot và đang `SHORTLISTED`. Slot đã đặt → 409. Đơn tự chuyển thành `INTERVIEWING` | 200 InterviewSlot |
-| `DELETE /api/interview-slots/{id}` | RECRUITER, ADMIN | | 204. Slot đã có người đặt → 409 |
-| `POST /api/interview-feedbacks` | RECRUITER, ADMIN | `{ interviewSlotId, score, comment }`. Slot phải đã có người đặt. Mỗi slot một feedback (trùng → 409) | 201 |
-| `GET /api/interview-feedbacks/slot/{slotId}` | RECRUITER, ADMIN | | InterviewFeedback hoặc 404 |
+| `DELETE /api/interview-slots/{id}` | RECRUITER (chủ tin) | | 204. Slot đã có người đặt → 409 |
+| `POST /api/interview-feedbacks` | RECRUITER (chủ tin) | `{ interviewSlotId, score, comment }`. Slot phải đã có người đặt. Mỗi slot một feedback (trùng → 409). Admin không đánh giá | 201 |
+| `GET /api/interview-feedbacks/slot/{slotId}` | RECRUITER (chủ tin), ADMIN | | InterviewFeedback hoặc 404 |
 
 ### 5.8 Offer
 
 | API | Quyền | Tham số / body | Trả về |
 |---|---|---|---|
-| `POST /api/offers` | RECRUITER, ADMIN | `{ applicationId, salary, startDate }`. Đơn phải đang `INTERVIEWING` (nếu không → 409). Đơn tự chuyển thành `OFFERED` | 201 Offer (`PENDING`) |
+| `POST /api/offers` | RECRUITER (chủ tin) | `{ applicationId, salary, startDate }`. Đơn phải đang `SHORTLISTED` hoặc `INTERVIEWING` (nếu không → 409). Đơn tự chuyển thành `OFFERED`. Admin không gửi offer | 201 Offer (`PENDING`) |
 | `GET /api/offers` | RECRUITER, ADMIN | page, size, sortBy, sortDir | Page. Recruiter chỉ thấy của mình |
 | `GET /api/offers/my` | `JOB_SEEKER` | như trên | Page offer tôi nhận |
 | `PATCH /api/offers/{id}/respond?accept=true` | `JOB_SEEKER` (chủ offer) | `accept` true là chấp nhận, false là từ chối. Chỉ trả lời được 1 lần (409) | Offer |
+| `PATCH /api/offers/{id}/cancel` | RECRUITER (chủ tin) | Hủy offer đang `PENDING`. Đơn quay về trạng thái trước (`INTERVIEWING` hoặc `SHORTLISTED`) | Offer (`CANCELLED`) |
+| `DELETE /api/offers/{id}` | RECRUITER (chủ tin) | Xóa offer | 204 |
 
 ### 5.9 Thông báo và review
 

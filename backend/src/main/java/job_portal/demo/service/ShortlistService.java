@@ -27,9 +27,13 @@ public class ShortlistService {
 	// Nếu một trong hai lỗi thì cả hai cùng bị hoàn tác, không để dữ liệu nửa vời.
 	@Transactional
 	public Shortlist create(ShortlistRequest request, User user) {
+		if (user.getRole() != Role.RECRUITER) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only recruiters can shortlist applications");
+		}
+
 		JobApplication application = applicationService.getById(request.applicationId());
 
-		// Phải là recruiter đăng tin đó (hoặc admin)
+		// Phải là recruiter đăng tin đó
 		checkOwner(application, user);
 
 		// Chỉ đơn mới nộp (APPLIED) mới shortlist được. Đơn đã shortlist rồi, bị từ
@@ -51,7 +55,7 @@ public class ShortlistService {
 		return saved;
 	}
 
-	// Danh sách shortlist: admin thấy hết, recruiter chỉ thấy của mình
+	// Danh sách shortlist: admin thấy hết để giám sát, recruiter chỉ thấy của mình
 	public Page<Shortlist> getAll(User user, Pageable pageable) {
 		if (user.getRole() == Role.ADMIN) {
 			return shortlistRepository.findAll(pageable); // findAll(pageable) có sẵn trong JpaRepository
@@ -79,11 +83,11 @@ public class ShortlistService {
 		applicationService.changeStatus(application, ApplicationStatus.APPLIED); // Trả đơn về trạng thái ban đầu
 	}
 
-	// Kiểm tra quyền: admin hoặc recruiter đăng tin mà đơn này nộp vào
+	// Kiểm tra quyền: chỉ recruiter đăng tin mà đơn này nộp vào (Admin không có quyền thao tác nghiệp vụ này)
 	private void checkOwner(JobApplication application, User user) {
-		boolean isAdmin = user.getRole() == Role.ADMIN;
-		boolean isOwner = application.getJobListing().getRecruiter().getId().equals(user.getId());
-		if (!isAdmin && !isOwner) {
+		boolean isOwner = user.getRole() == Role.RECRUITER
+				&& application.getJobListing().getRecruiter().getId().equals(user.getId());
+		if (!isOwner) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
 					"You can only manage applications of your own jobs");
 		}

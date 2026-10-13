@@ -99,10 +99,12 @@ export function useMyApplications() {
       });
       showToast('Đặt lịch phỏng vấn thành công!', 'success');
       setBookingModalOpen(false);
+      setSelectedAppForInterview(null);
       fetchApplications();
     } catch (err) {
       console.error('Lỗi đặt lịch phỏng vấn:', err);
-      showToast(err.response?.data?.message || 'Đặt lịch phỏng vấn thất bại.', 'error');
+      const message = err.userFriendlyMessage || err.response?.data?.message || 'Đặt lịch phỏng vấn thất bại.';
+      showToast(message, 'error');
     } finally {
       setIsBookingSlot(false);
     }

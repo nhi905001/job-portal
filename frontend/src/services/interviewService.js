@@ -31,6 +31,14 @@ const interviewService = {
   },
 
   /**
+   * Lấy khung giờ phỏng vấn đã đặt theo mã đơn ứng tuyển
+   * @param {number|string} applicationId
+   */
+  getSlotByApplication: async (applicationId) => {
+    return await axiosClient.get(`/api/interview-slots/application/${applicationId}`);
+  },
+
+  /**
    * Hủy đặt lịch phỏng vấn (Ứng viên hoặc Recruiter)
    * @param {number|string} slotId
    */

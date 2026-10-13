@@ -155,7 +155,7 @@ export function useUsers() {
       fetchUsers();
     } catch (err) {
       console.error('Lỗi đổi trạng thái active:', err);
-      showToast(err.response?.data?.message || 'Thao tác thất bại.', 'error');
+      showToast(err.userFriendlyMessage || err.response?.data?.message || err.message || 'Thao tác thất bại.', 'error');
     } finally {
       setIsToggling(false);
     }

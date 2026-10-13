@@ -14,6 +14,7 @@ import job_portal.demo.entity.Offer;
 import job_portal.demo.entity.OfferStatus;
 import job_portal.demo.entity.Role;
 import job_portal.demo.entity.User;
+import job_portal.demo.repository.InterviewSlotRepository;
 import job_portal.demo.repository.OfferRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -24,29 +25,34 @@ public class OfferService {
 	private final OfferRepository offerRepository;
 	private final JobApplicationService applicationService;
 	private final NotificationService notificationService;
+	private final InterviewSlotRepository slotRepository;
 
 	// Recruiter gửi offer. Ghi 2 chỗ (lưu Offer + đổi trạng thái đơn) nên cần
 	// @Transactional.
 	@Transactional
 	public Offer create(OfferRequest request, User user) {
+		if (user.getRole() != Role.RECRUITER) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only recruiters can send offers");
+		}
+
 		JobApplication application = applicationService.getById(request.applicationId());
 
-		// Phải là recruiter đăng tin đó (hoặc admin)
-		boolean isAdmin = user.getRole() == Role.ADMIN;
+		// Phải là recruiter đăng tin đó (Admin không có quyền gửi offer)
 		boolean isOwner = application.getJobListing().getRecruiter().getId().equals(user.getId());
-		if (!isAdmin && !isOwner) {
+		if (!isOwner) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only send offers for your own jobs");
 		}
 
-		// Chỉ gửi offer cho ứng viên ĐÃ ĐẶT LỊCH PHỎNG VẤN (đơn đang INTERVIEWING)
-		if (application.getStatus() != ApplicationStatus.INTERVIEWING) {
+		// Cho phép gửi offer cho ứng viên đã SHORTLISTED hoặc đang INTERVIEWING
+		if (application.getStatus() != ApplicationStatus.INTERVIEWING
+				&& application.getStatus() != ApplicationStatus.SHORTLISTED) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT,
-					"Offers can only be sent to applications in INTERVIEWING status");
+					"Offers can only be sent to applications in SHORTLISTED or INTERVIEWING status");
 		}
 
-		// Mỗi đơn chỉ có một offer
-		if (offerRepository.existsByJobApplicationId(application.getId())) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, "An offer already exists for this application");
+		// Mỗi đơn chỉ có một offer đang hiệu lực
+		if (offerRepository.hasActiveOffer(application.getId())) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "An active offer already exists for this application");
 		}
 
 		Offer offer = new Offer();
@@ -57,6 +63,68 @@ public class OfferService {
 
 		applicationService.changeStatus(application, ApplicationStatus.OFFERED);
 		return saved;
+	}
+
+	// Recruiter hủy offer (chuyển trạng thái sang CANCELLED, hoàn trả trạng thái đơn)
+	@Transactional
+	public Offer cancel(Long id, User user) {
+		Offer offer = offerRepository.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Offer not found"));
+
+		// Phải là recruiter đăng tin đó (Admin không có quyền hủy offer)
+		boolean isOwner = user.getRole() == Role.RECRUITER
+				&& offer.getJobApplication().getJobListing().getRecruiter().getId().equals(user.getId());
+		if (!isOwner) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only cancel offers of your own jobs");
+		}
+
+		// Chỉ hủy được khi offer còn PENDING
+		if (offer.getStatus() != OfferStatus.PENDING) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT,
+					"Only pending offers can be cancelled");
+		}
+
+		offer.setStatus(OfferStatus.CANCELLED);
+		Offer saved = offerRepository.save(offer);
+
+		// Trả đơn ứng tuyển về trạng thái trước đó
+		JobApplication application = offer.getJobApplication();
+		boolean hasInterview = slotRepository.existsByJobApplicationId(application.getId());
+		ApplicationStatus prevStatus = hasInterview ? ApplicationStatus.INTERVIEWING : ApplicationStatus.SHORTLISTED;
+		applicationService.changeStatus(application, prevStatus);
+
+		// Thông báo cho ứng viên
+		notificationService.notify(application.getCandidate(),
+				"The offer for \"" + application.getJobListing().getTitle() + "\" has been cancelled by the recruiter");
+
+		return saved;
+	}
+
+	// Recruiter xóa hoàn toàn offer khỏi hệ thống
+	@Transactional
+	public void delete(Long id, User user) {
+		Offer offer = offerRepository.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Offer not found"));
+
+		boolean isOwner = user.getRole() == Role.RECRUITER
+				&& offer.getJobApplication().getJobListing().getRecruiter().getId().equals(user.getId());
+		if (!isOwner) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only delete offers of your own jobs");
+		}
+
+		if (offer.getStatus() != OfferStatus.PENDING && offer.getStatus() != OfferStatus.CANCELLED) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT,
+					"Cannot delete an offer that has already been accepted or rejected");
+		}
+
+		JobApplication application = offer.getJobApplication();
+		offerRepository.delete(offer);
+
+		if (application.getStatus() == ApplicationStatus.OFFERED) {
+			boolean hasInterview = slotRepository.existsByJobApplicationId(application.getId());
+			ApplicationStatus prevStatus = hasInterview ? ApplicationStatus.INTERVIEWING : ApplicationStatus.SHORTLISTED;
+			applicationService.changeStatus(application, prevStatus);
+		}
 	}
 
 	// Ứng viên xem các offer mình nhận được

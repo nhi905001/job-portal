@@ -24,11 +24,14 @@ export default function OfferForm({
           onChange={(e) => onChange('applicationId', e.target.value)}
           className="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-lg text-xs text-slate-800 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900"
         >
-          {interviewingApps.map((app) => (
-            <option key={app.id} value={app.id}>
-              {app.candidate?.fullName || app.user?.fullName || 'Ứng viên'} ({app.candidate?.email || app.user?.email || '—'}) — {app.jobListing?.title}
-            </option>
-          ))}
+          {interviewingApps.map((app) => {
+            const statusLabel = app.status === 'INTERVIEWING' ? 'Phỏng vấn' : 'Shortlist';
+            return (
+              <option key={app.id} value={app.id}>
+                {app.candidate?.fullName || app.user?.fullName || 'Ứng viên'} ({app.candidate?.email || app.user?.email || '—'}) — {app.jobListing?.title} [{statusLabel}]
+              </option>
+            );
+          })}
         </select>
       </div>
 

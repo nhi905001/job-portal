@@ -63,18 +63,26 @@ export function useOffers() {
 
     try {
       setIsLoadingApps(true);
-      const res = await applicationService.getApplications({
-        status: 'INTERVIEWING',
-        size: 100,
-      });
-      const apps = res?.content || [];
-      setInterviewingApps(apps);
-      if (apps.length > 0) {
-        setOfferForm((prev) => ({ ...prev, applicationId: String(apps[0].id) }));
+      const [resInterviewing, resShortlisted] = await Promise.all([
+        applicationService.getApplications({
+          status: 'INTERVIEWING',
+          size: 100,
+        }),
+        applicationService.getApplications({
+          status: 'SHORTLISTED',
+          size: 100,
+        }),
+      ]);
+      const interviewingList = resInterviewing?.content || [];
+      const shortlistedList = resShortlisted?.content || [];
+      const combined = [...interviewingList, ...shortlistedList];
+      setInterviewingApps(combined);
+      if (combined.length > 0) {
+        setOfferForm((prev) => ({ ...prev, applicationId: String(combined[0].id) }));
       }
     } catch (err) {
-      console.error('Lỗi tải danh sách ứng viên INTERVIEWING:', err);
-      showToast('Lỗi khi tải danh sách ứng viên phỏng vấn.', 'error');
+      console.error('Lỗi tải danh sách ứng viên đủ điều kiện nhận Offer:', err);
+      showToast('Lỗi khi tải danh sách ứng viên.', 'error');
     } finally {
       setIsLoadingApps(false);
     }
@@ -124,6 +132,38 @@ export function useOffers() {
     }
   };
 
+  // Cancel Offer Dialog State
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+  const [offerToCancel, setOfferToCancel] = useState(null);
+  const [isCancelling, setIsCancelling] = useState(false);
+
+  const handleOpenCancelDialog = (offer) => {
+    setOfferToCancel(offer);
+    setCancelDialogOpen(true);
+  };
+
+  const handleCloseCancelDialog = () => {
+    setOfferToCancel(null);
+    setCancelDialogOpen(false);
+  };
+
+  const handleConfirmCancel = async () => {
+    if (!offerToCancel) return;
+    try {
+      setIsCancelling(true);
+      await offerService.cancelOffer(offerToCancel.id);
+      showToast('Đã hủy Thư mời nhận việc (Offer) thành công!', 'success');
+      setCancelDialogOpen(false);
+      setOfferToCancel(null);
+      fetchOffers();
+    } catch (err) {
+      console.error('Lỗi hủy Offer:', err);
+      showToast(err.response?.data?.message || 'Không thể hủy Offer này.', 'error');
+    } finally {
+      setIsCancelling(false);
+    }
+  };
+
   return {
     offers,
     page,
@@ -135,11 +175,17 @@ export function useOffers() {
     isLoadingApps,
     isSubmittingOffer,
     offerForm,
+    cancelDialogOpen,
+    offerToCancel,
+    isCancelling,
     setPage,
     handleOpenCreateModal,
     handleCloseCreateModal,
     handleFormChange,
     handleSubmitOffer,
+    handleOpenCancelDialog,
+    handleCloseCancelDialog,
+    handleConfirmCancel,
     refetchOffers: fetchOffers,
   };
 }

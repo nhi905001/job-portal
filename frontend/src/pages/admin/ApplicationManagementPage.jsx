@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAuth } from '../../context/AuthContext';
 import { useApplications } from '../../hooks/useApplications';
 import Card from '../../components/common/Card';
 import Pagination from '../../components/common/Pagination';
@@ -11,6 +12,9 @@ import {
 } from '../../features/applications';
 
 export default function ApplicationManagementPage() {
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'ADMIN';
+
   const {
     applications,
     page,
@@ -53,12 +57,18 @@ export default function ApplicationManagementPage() {
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             Quản Lý Đơn Ứng Tuyển
           </h1>
-          <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[11px] font-bold border border-amber-200/60">
-            Hồ sơ
+          <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${
+            isAdmin
+              ? 'bg-slate-100 text-slate-700 border-slate-200'
+              : 'bg-amber-100 text-amber-900 border-amber-200/60'
+          }`}>
+            {isAdmin ? 'Giám sát hệ thống' : 'Hồ sơ'}
           </span>
         </div>
         <p className="text-xs sm:text-sm text-slate-500 mt-1">
-          Xem xét hồ sơ ứng viên, lọc theo tin tuyển dụng, đưa vào Shortlist hoặc cập nhật trạng thái.
+          {isAdmin
+            ? 'Theo dõi và giám sát hồ sơ ứng viên trong toàn hệ thống (Quyền Admin: Chỉ xem, không shortlist hoặc từ chối đơn).'
+            : 'Xem xét hồ sơ ứng viên, lọc theo tin tuyển dụng, đưa vào Shortlist hoặc cập nhật trạng thái.'}
         </p>
       </div>
 

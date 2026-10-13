@@ -1,5 +1,6 @@
 import React from 'react';
 import { Plus } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 import { useInterviews } from '../../hooks/useInterviews';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
@@ -12,6 +13,10 @@ import {
 } from '../../features/interviews';
 
 export default function InterviewManagementPage() {
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'ADMIN';
+  const isRecruiter = user?.role === 'RECRUITER';
+
   const {
     slots,
     page,
@@ -52,23 +57,34 @@ export default function InterviewManagementPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-            Quản Lý Lịch Phỏng Vấn (Interview Slots)
-          </h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+              Quản Lý Lịch Phỏng Vấn (Interview Slots)
+            </h1>
+            {isAdmin && (
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold border bg-slate-100 text-slate-700 border-slate-200">
+                Chế độ giám sát
+              </span>
+            )}
+          </div>
           <p className="text-xs text-slate-500 mt-1">
-            Thiết lập các khung giờ phỏng vấn, theo dõi lịch ứng viên đã đặt và chấm điểm đánh giá
+            {isAdmin
+              ? 'Theo dõi danh sách khung giờ phỏng vấn trên hệ thống (Quyền Admin: Chỉ xem, không tạo khung giờ hay ghi đánh giá).'
+              : 'Thiết lập các khung giờ phỏng vấn, theo dõi lịch ứng viên đã đặt và chấm điểm đánh giá'}
           </p>
         </div>
 
-        <Button
-          variant="primary"
-          size="md"
-          onClick={handleOpenCreateModal}
-          leftIcon={<Plus className="w-4 h-4" />}
-          className="self-start sm:self-auto"
-        >
-          Tạo khung giờ mới
-        </Button>
+        {isRecruiter && (
+          <Button
+            variant="primary"
+            size="md"
+            onClick={handleOpenCreateModal}
+            leftIcon={<Plus className="w-4 h-4" />}
+            className="self-start sm:self-auto"
+          >
+            Tạo khung giờ mới
+          </Button>
+        )}
       </div>
 
       {/* Table Card */}

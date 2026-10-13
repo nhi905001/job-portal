@@ -39,6 +39,17 @@ const userService = {
       params: { value: activeValue },
     });
   },
+
+  /**
+   * Alias: Khóa hoặc mở khóa tài khoản người dùng (tương thích các hook gọi toggleUserActive)
+   * @param {number|string} id
+   * @param {boolean} activeValue - true để mở, false để khóa
+   */
+  toggleUserActive: async (id, activeValue) => {
+    return await axiosClient.patch(`/api/users/${id}/active`, null, {
+      params: { value: activeValue },
+    });
+  },
 };
 
 export default userService;

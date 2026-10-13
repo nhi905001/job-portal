@@ -43,10 +43,10 @@ public class InterviewSlotController {
 		return slotService.search(jobListingId, onlyFree, user, PageRequest.of(page, size, sort));
 	}
 
-	// POST /api/interview-slots : recruiter tạo khung giờ
+	// POST /api/interview-slots : recruiter tạo khung giờ. Admin không có quyền tạo khung giờ.
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	@PreAuthorize("hasAnyRole('RECRUITER','ADMIN')")
+	@PreAuthorize("hasRole('RECRUITER')")
 	public InterviewSlot create(@Valid @RequestBody InterviewSlotRequest request, @AuthenticationPrincipal User user) {
 		return slotService.create(request, user);
 	}
@@ -60,10 +60,16 @@ public class InterviewSlotController {
 		return slotService.book(id, request, user);
 	}
 
+	// GET /api/interview-slots/application/1 : xem lịch phỏng vấn của đơn ứng tuyển
+	@GetMapping("/application/{applicationId}")
+	public InterviewSlot getByApplication(@PathVariable Long applicationId, @AuthenticationPrincipal User user) {
+		return slotService.getByApplicationId(applicationId, user);
+	}
+
 	// DELETE /api/interview-slots/3
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@PreAuthorize("hasAnyRole('RECRUITER','ADMIN')")
+	@PreAuthorize("hasRole('RECRUITER')")
 	public void delete(@PathVariable Long id, @AuthenticationPrincipal User user) {
 		slotService.delete(id, user);
 	}

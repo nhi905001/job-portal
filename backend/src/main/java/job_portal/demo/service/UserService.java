@@ -60,7 +60,7 @@ public class UserService {
 		User user = getById(id);
 		// Chặn admin tự khóa chính mình (khóa xong là không ai đăng nhập quản trị được
 		// nữa)
-		if (user.getId().equals(actor.getId())) {
+		if (actor != null && user.getId().equals(actor.getId())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You cannot change your own status");
 		}
 		user.setActive(active);

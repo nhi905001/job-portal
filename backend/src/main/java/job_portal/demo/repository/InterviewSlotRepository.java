@@ -22,4 +22,10 @@ public interface InterviewSlotRepository extends JpaRepository<InterviewSlot, Lo
 			""")
 	Page<InterviewSlot> search(@Param("jobListingId") Long jobListingId, @Param("recruiterId") Long recruiterId,
 			@Param("onlyFree") boolean onlyFree, Pageable pageable);
+
+	// Tìm khung giờ phỏng vấn theo đơn ứng tuyển
+	java.util.Optional<InterviewSlot> findByJobApplicationId(Long jobApplicationId);
+
+	// Kiểm tra xem đơn ứng tuyển này đã từng đặt lịch phỏng vấn hay chưa
+	boolean existsByJobApplicationId(Long jobApplicationId);
 }
