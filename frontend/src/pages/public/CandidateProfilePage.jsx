@@ -41,7 +41,7 @@ export default function CandidateProfilePage() {
       </div>
 
       {/* Main Card */}
-      <Card className="shadow-none border-slate-200 p-6 sm:p-8">
+      <Card className="shadow-card border-slate-200/90 rounded-2xl p-6 sm:p-8 bg-white">
         {errorMessage && (
           <Alert type="error" message={errorMessage} onClose={() => setErrorMessage('')} className="mb-5" />
         )}

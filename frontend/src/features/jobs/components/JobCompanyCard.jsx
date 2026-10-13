@@ -12,7 +12,7 @@ export default function JobCompanyCard({ company, onOpenReview }) {
       <div className="flex items-center gap-3">
         <div className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-200 overflow-hidden flex items-center justify-center shrink-0">
           {company.logoUrl ? (
-            <img src={fileService.getFullFileUrl(company.logoUrl)} alt="Logo" className="w-full h-full object-cover" />
+            <img src={fileService.getFullFileUrl(company.logoUrl)} alt="Logo" className="w-full h-full object-contain p-1 bg-white" />
           ) : (
             <Building2 className="w-6 h-6 text-slate-400" />
           )}

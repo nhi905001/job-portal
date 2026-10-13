@@ -7,11 +7,9 @@ import {
   FileText, 
   Gift, 
   LogOut, 
-  Bell, 
   Menu, 
   X, 
   ShieldCheck, 
-  Building2, 
   ChevronDown 
 } from 'lucide-react';
 import NotificationBell from '../components/common/NotificationBell';
@@ -29,44 +27,49 @@ export default function PublicLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] text-[#2C261E] flex flex-col font-sans selection:bg-[#F6B779]/30">
+    <div className="min-h-screen bg-[#F8F9FB] text-slate-800 flex flex-col font-sans selection:bg-amber-400/30 selection:text-amber-950">
       {/* Top Header / Navigation Bar */}
-      <header className="sticky top-0 z-40 bg-[#FAF7F2]/90 backdrop-blur-md border-b border-[#EFE9DF]">
+      <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-slate-200/80 shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 sm:h-20">
+          <div className="flex items-center justify-between h-18 sm:h-20">
             {/* Logo & Main Nav */}
             <div className="flex items-center gap-8">
-              <Link to="/" className="flex items-center gap-2 group">
-                <div className="w-9 h-9 rounded-xl bg-[#F6B779] flex items-center justify-center text-[#2C241E] font-bold shadow-sm transition-transform group-hover:scale-105">
-                  <Briefcase className="w-5 h-5 text-[#2C241E]" />
+              <Link to="/" className="flex items-center gap-3 group">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-400 to-amber-300 flex items-center justify-center text-slate-950 font-bold shadow-xs transition-transform group-hover:scale-105">
+                  <svg className="w-5 h-5 text-slate-950" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M7 12h10M7 8h10M7 16h6" />
+                  </svg>
                 </div>
                 <div>
-                  <span className="text-xl font-bold tracking-tight text-[#1E1E1E]">JobPortal</span>
-                  <span className="text-[10px] block text-[#8A8073] -mt-1 font-medium tracking-wide">
+                  <span className="text-xl font-extrabold tracking-tight text-slate-900 block leading-tight">
+                    JobPortal
+                  </span>
+                  <span className="text-[10px] block text-amber-600 font-semibold uppercase tracking-wider">
                     Cơ Hội & Tuyển Dụng
                   </span>
                 </div>
               </Link>
 
               {/* Desktop Nav Links */}
-              <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+              <nav className="hidden md:flex items-center gap-6 text-xs sm:text-sm font-medium">
                 <NavLink
                   to="/"
                   className={({ isActive }) =>
-                    `transition-colors ${
-                      isActive ? 'text-[#1E1E1E] font-semibold' : 'text-[#6B6152] hover:text-[#1E1E1E]'
+                    `px-3 py-1.5 rounded-xl transition-all ${
+                      isActive ? 'text-slate-950 font-bold bg-amber-50 text-amber-900' : 'text-slate-600 hover:text-slate-950 hover:bg-slate-50'
                     }`
                   }
                 >
-                  Khám phá Việc làm
+                  Job Board
                 </NavLink>
                 {isAuthenticated && user?.role === 'JOB_SEEKER' && (
                   <>
                     <NavLink
                       to="/my-applications"
                       className={({ isActive }) =>
-                        `transition-colors ${
-                          isActive ? 'text-[#1E1E1E] font-semibold' : 'text-[#6B6152] hover:text-[#1E1E1E]'
+                        `px-3 py-1.5 rounded-xl transition-all ${
+                          isActive ? 'text-slate-950 font-bold bg-amber-50 text-amber-900' : 'text-slate-600 hover:text-slate-950 hover:bg-slate-50'
                         }`
                       }
                     >
@@ -75,12 +78,12 @@ export default function PublicLayout() {
                     <NavLink
                       to="/my-offers"
                       className={({ isActive }) =>
-                        `transition-colors ${
-                          isActive ? 'text-[#1E1E1E] font-semibold' : 'text-[#6B6152] hover:text-[#1E1E1E]'
+                        `px-3 py-1.5 rounded-xl transition-all ${
+                          isActive ? 'text-slate-950 font-bold bg-amber-50 text-amber-900' : 'text-slate-600 hover:text-slate-950 hover:bg-slate-50'
                         }`
                       }
                     >
-                      Thư mời nhận việc
+                      Offers nhận việc
                     </NavLink>
                   </>
                 )}
@@ -88,17 +91,17 @@ export default function PublicLayout() {
             </div>
 
             {/* Right User Actions */}
-            <div className="hidden md:flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-3.5">
               {isAuthenticated && user ? (
                 <>
                   {/* Nếu là Recruiter hoặc Admin -> Nút tắt vào trang Quản trị */}
                   {(user.role === 'ADMIN' || user.role === 'RECRUITER') && (
                     <Link
                       to="/admin"
-                      className="flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-xl bg-[#1E1E1E] text-white hover:bg-black transition-all shadow-sm"
+                      className="flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-all shadow-xs"
                     >
-                      <ShieldCheck className="w-4 h-4 text-[#F6B779]" />
-                      <span>Trang Quản Trị ({user.role})</span>
+                      <ShieldCheck className="w-4 h-4 text-amber-400" />
+                      <span>Workspace ({user.role})</span>
                     </Link>
                   )}
 
@@ -110,28 +113,28 @@ export default function PublicLayout() {
                     <button
                       type="button"
                       onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                      className="flex items-center gap-2.5 p-1.5 pl-3 bg-white border border-[#E6E0D6] rounded-xl hover:bg-[#FAF7F2] transition-colors"
+                      className="flex items-center gap-2.5 p-1 pl-3 bg-white border border-slate-200/90 rounded-2xl hover:bg-slate-50/80 transition-colors shadow-2xs"
                     >
                       <div className="text-left">
-                        <span className="block text-xs font-semibold text-[#1E1E1E] leading-tight">
-                          {user.fullName || user.email}
+                        <span className="block text-xs font-bold text-slate-900 leading-tight">
+                          {user.fullName || user.email?.split('@')[0]}
                         </span>
-                        <span className="block text-[10px] text-[#8A8073] capitalize">
+                        <span className="block text-[10px] text-amber-700 capitalize font-medium">
                           {user.role === 'JOB_SEEKER' ? 'Ứng viên' : user.role}
                         </span>
                       </div>
-                      <div className="w-8 h-8 rounded-lg bg-[#FAF7F2] border border-[#E2DACD] flex items-center justify-center font-bold text-xs text-[#4A3E31]">
+                      <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-400 to-amber-300 text-slate-950 flex items-center justify-center font-bold text-xs shadow-2xs">
                         {user.fullName ? user.fullName.charAt(0).toUpperCase() : 'U'}
                       </div>
-                      <ChevronDown className="w-3.5 h-3.5 text-[#8A8073]" />
+                      <ChevronDown className="w-3.5 h-3.5 text-slate-400 mr-1" />
                     </button>
 
                     {/* Dropdown Menu */}
                     {userDropdownOpen && (
-                      <div className="absolute right-0 mt-2 w-56 bg-white border border-[#EFE9DF] rounded-2xl shadow-xl py-2 z-50 text-xs">
-                        <div className="px-4 py-2 border-b border-[#F4EFE6]">
-                          <p className="font-semibold text-[#1E1E1E]">{user.fullName}</p>
-                          <p className="text-[#8A8073] truncate">{user.email}</p>
+                      <div className="absolute right-0 mt-2 w-56 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 z-50 text-xs">
+                        <div className="px-4 py-2 border-b border-slate-100">
+                          <p className="font-bold text-slate-900">{user.fullName}</p>
+                          <p className="text-slate-500 truncate text-[11px]">{user.email}</p>
                         </div>
 
                         {user.role === 'JOB_SEEKER' && (
@@ -139,25 +142,25 @@ export default function PublicLayout() {
                             <Link
                               to="/profile"
                               onClick={() => setUserDropdownOpen(false)}
-                              className="flex items-center gap-2.5 px-4 py-2.5 hover:bg-[#FAF7F2] text-[#4A3E31] transition-colors"
+                              className="flex items-center gap-2.5 px-4 py-2.5 hover:bg-slate-50 text-slate-700 transition-colors"
                             >
-                              <User className="w-4 h-4 text-[#8A8073]" />
+                              <User className="w-4 h-4 text-slate-400" />
                               <span>Hồ sơ cá nhân & CV</span>
                             </Link>
                             <Link
                               to="/my-applications"
                               onClick={() => setUserDropdownOpen(false)}
-                              className="flex items-center gap-2.5 px-4 py-2.5 hover:bg-[#FAF7F2] text-[#4A3E31] transition-colors"
+                              className="flex items-center gap-2.5 px-4 py-2.5 hover:bg-slate-50 text-slate-700 transition-colors"
                             >
-                              <FileText className="w-4 h-4 text-[#8A8073]" />
+                              <FileText className="w-4 h-4 text-slate-400" />
                               <span>Đơn ứng tuyển của tôi</span>
                             </Link>
                             <Link
                               to="/my-offers"
                               onClick={() => setUserDropdownOpen(false)}
-                              className="flex items-center gap-2.5 px-4 py-2.5 hover:bg-[#FAF7F2] text-[#4A3E31] transition-colors"
+                              className="flex items-center gap-2.5 px-4 py-2.5 hover:bg-slate-50 text-slate-700 transition-colors"
                             >
-                              <Gift className="w-4 h-4 text-[#8A8073]" />
+                              <Gift className="w-4 h-4 text-slate-400" />
                               <span>Thư mời nhận việc (Offers)</span>
                             </Link>
                           </>
@@ -167,21 +170,21 @@ export default function PublicLayout() {
                           <Link
                             to="/admin"
                             onClick={() => setUserDropdownOpen(false)}
-                            className="flex items-center gap-2.5 px-4 py-2.5 hover:bg-[#FAF7F2] text-[#4A3E31] transition-colors"
+                            className="flex items-center gap-2.5 px-4 py-2.5 hover:bg-slate-50 text-slate-700 transition-colors"
                           >
-                            <ShieldCheck className="w-4 h-4 text-[#8A8073]" />
+                            <ShieldCheck className="w-4 h-4 text-slate-400" />
                             <span>Khu vực Quản trị</span>
                           </Link>
                         )}
 
-                        <div className="border-t border-[#F4EFE6] mt-1 pt-1">
+                        <div className="border-t border-slate-100 mt-1 pt-1">
                           <button
                             type="button"
                             onClick={handleLogout}
                             className="w-full flex items-center gap-2.5 px-4 py-2.5 text-rose-600 hover:bg-rose-50 transition-colors text-left"
                           >
                             <LogOut className="w-4 h-4" />
-                            <span>Đăng xuất khỏi hệ thống</span>
+                            <span>Đăng xuất</span>
                           </button>
                         </div>
                       </div>
@@ -192,13 +195,13 @@ export default function PublicLayout() {
                 <>
                   <Link
                     to="/register"
-                    className="text-xs sm:text-sm font-medium text-[#4A4135] hover:text-[#1E1E1E] transition-colors"
+                    className="text-xs sm:text-sm font-semibold text-slate-700 hover:text-slate-950 px-3 py-2 transition-colors"
                   >
-                    Đăng ký tài khoản
+                    Đăng ký
                   </Link>
                   <Link
                     to="/login"
-                    className="bg-[#F6B779] hover:bg-[#EEA861] active:bg-[#E59C51] text-[#2C241E] text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2.5 rounded-xl transition-all shadow-sm"
+                    className="bg-amber-400 hover:bg-amber-500 active:bg-amber-600 text-slate-950 text-xs sm:text-sm font-bold px-5 py-2.5 rounded-xl transition-all shadow-xs"
                   >
                     Đăng nhập
                   </Link>
@@ -211,7 +214,7 @@ export default function PublicLayout() {
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 text-[#4A4135] hover:text-[#1E1E1E] rounded-xl hover:bg-[#F2ECE1]"
+                className="p-2 text-slate-600 hover:text-slate-900 rounded-xl hover:bg-slate-100"
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -221,13 +224,13 @@ export default function PublicLayout() {
 
         {/* Mobile menu panel */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-b border-[#EFE9DF] bg-white px-4 py-4 space-y-3">
+          <div className="md:hidden border-b border-slate-200 bg-white px-4 py-4 space-y-3">
             <Link
               to="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="block text-sm font-medium text-[#4A4135] py-2"
+              className="block text-sm font-medium text-slate-700 py-2"
             >
-              Khám phá Việc làm
+              Job Board
             </Link>
             {isAuthenticated && user ? (
               <>
@@ -236,21 +239,21 @@ export default function PublicLayout() {
                     <Link
                       to="/profile"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block text-sm font-medium text-[#4A4135] py-2"
+                      className="block text-sm font-medium text-slate-700 py-2"
                     >
                       Hồ sơ cá nhân & CV
                     </Link>
                     <Link
                       to="/my-applications"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block text-sm font-medium text-[#4A4135] py-2"
+                      className="block text-sm font-medium text-slate-700 py-2"
                     >
                       Đơn ứng tuyển của tôi
                     </Link>
                     <Link
                       to="/my-offers"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block text-sm font-medium text-[#4A4135] py-2"
+                      className="block text-sm font-medium text-slate-700 py-2"
                     >
                       Thư mời nhận việc
                     </Link>
@@ -260,7 +263,7 @@ export default function PublicLayout() {
                   <Link
                     to="/admin"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block text-sm font-semibold text-blue-600 py-2"
+                    className="block text-sm font-semibold text-amber-600 py-2"
                   >
                     Vào trang Quản trị ({user.role})
                   </Link>
@@ -268,7 +271,7 @@ export default function PublicLayout() {
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="w-full text-left text-sm font-medium text-rose-600 py-2 border-t border-gray-100"
+                  className="w-full text-left text-sm font-medium text-rose-600 py-2 border-t border-slate-100"
                 >
                   Đăng xuất
                 </button>
@@ -278,14 +281,14 @@ export default function PublicLayout() {
                 <Link
                   to="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center py-2.5 bg-[#F6B779] text-[#2C241E] font-semibold text-sm rounded-xl"
+                  className="w-full text-center py-2.5 bg-amber-400 text-slate-950 font-bold text-sm rounded-xl"
                 >
                   Đăng nhập
                 </Link>
                 <Link
                   to="/register"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center py-2.5 border border-[#E6E0D6] text-[#4A3E31] font-medium text-sm rounded-xl"
+                  className="w-full text-center py-2.5 border border-slate-200 text-slate-700 font-medium text-sm rounded-xl"
                 >
                   Đăng ký
                 </Link>
@@ -301,15 +304,15 @@ export default function PublicLayout() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-[#EFE9DF] bg-white/70 py-8 text-xs text-[#8A8073]">
+      <footer className="border-t border-slate-200/80 bg-white py-8 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-[#1E1E1E]">JobPortal</span>
+            <span className="font-bold text-slate-900">JobPortal</span>
             <span>— Cổng thông tin Tuyển dụng & Kết nối Ứng viên</span>
           </div>
           <div className="flex items-center gap-6">
             <span>Hỗ trợ: contact@jobportal.vn</span>
-            <span>Copyright © JobPortal 2026 | Privacy Policy</span>
+            <span>Copyright © JobPortal 2026 | Modern Clean Design</span>
           </div>
         </div>
       </footer>

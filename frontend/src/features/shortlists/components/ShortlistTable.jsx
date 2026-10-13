@@ -38,8 +38,8 @@ export default function ShortlistTable({ shortlists, isLoading, onDeleteClick })
             </tr>
           ) : (
             shortlists.map((item) => {
-              const app = item.application;
-              const candidate = app?.user;
+              const app = item.jobApplication || item.application;
+              const candidate = app?.candidate || app?.user;
               const job = app?.jobListing;
 
               return (
@@ -55,10 +55,13 @@ export default function ShortlistTable({ shortlists, isLoading, onDeleteClick })
                     <Link
                       to={`/jobs/${job?.id}`}
                       target="_blank"
-                      className="hover:underline hover:text-slate-950 transition-colors"
+                      className="hover:underline hover:text-slate-950 transition-colors font-semibold block"
                     >
                       {job?.title || 'Vị trí công việc'}
                     </Link>
+                    {job?.company?.name && (
+                      <span className="text-slate-500 text-[11px] block">{job.company.name}</span>
+                    )}
                   </td>
 
                   <td className="px-5 py-4 text-slate-600 max-w-xs">
@@ -68,9 +71,9 @@ export default function ShortlistTable({ shortlists, isLoading, onDeleteClick })
                   </td>
 
                   <td className="px-5 py-4">
-                    {app?.cvUrl ? (
+                    {app?.resumeUrl || app?.cvUrl ? (
                       <a
-                        href={fileService.getFullFileUrl(app.cvUrl)}
+                        href={fileService.getFullFileUrl(app.resumeUrl || app.cvUrl)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 transition-colors"

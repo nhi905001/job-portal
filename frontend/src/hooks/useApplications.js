@@ -96,8 +96,9 @@ export function useApplications() {
     setProfileModalOpen(true);
     try {
       setIsLoadingProfile(true);
-      if (app.user?.id) {
-        const p = await profileService.getProfileByUserId(app.user.id);
+      const candidateId = app.candidate?.id || app.user?.id;
+      if (candidateId) {
+        const p = await profileService.getProfileByUserId(candidateId);
         setCandidateProfile(p);
       }
     } catch (err) {

@@ -49,9 +49,10 @@ export default function ReviewManagementPage() {
       />
 
       {/* Table Card */}
-      <Card className="shadow-none border-slate-200 overflow-hidden">
+      <Card className="shadow-card border-slate-200/90 rounded-2xl overflow-hidden bg-white">
         <ReviewTable
           reviews={reviews}
+          companies={companies}
           isLoading={isLoading}
           onDeleteClick={handleOpenDeleteDialog}
         />

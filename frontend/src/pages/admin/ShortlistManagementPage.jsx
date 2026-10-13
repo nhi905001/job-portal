@@ -50,7 +50,7 @@ export default function ShortlistManagementPage() {
       </div>
 
       {/* Table Card */}
-      <Card className="shadow-none border-slate-200 overflow-hidden">
+      <Card className="shadow-card border-slate-200/90 rounded-2xl overflow-hidden bg-white">
         <ShortlistTable
           shortlists={shortlists}
           isLoading={isLoading}
@@ -72,7 +72,7 @@ export default function ShortlistManagementPage() {
       <ConfirmDialog
         isOpen={deleteDialogOpen}
         title="Xóa khỏi Shortlist"
-        message={`Bạn có chắc chắn muốn xóa ứng viên "${itemToDelete?.application?.user?.fullName}" khỏi danh sách Shortlist không?`}
+        message={`Bạn có chắc chắn muốn xóa ứng viên "${itemToDelete?.jobApplication?.candidate?.fullName || itemToDelete?.application?.user?.fullName || 'này'}" khỏi danh sách Shortlist không?`}
         confirmText="Xác nhận xóa"
         confirmVariant="danger"
         isLoading={isDeleting}

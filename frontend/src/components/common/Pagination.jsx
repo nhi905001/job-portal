@@ -55,7 +55,7 @@ export default function Pagination({
           type="button"
           onClick={() => onPageChange(0)}
           disabled={page === 0}
-          className="p-1.5 rounded-xl border border-[#E2DAD0] bg-white text-[#4A3E31] hover:bg-[#FAF7F2] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="p-1.5 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           title="Trang đầu"
         >
           <ChevronsLeft className="w-4 h-4" />
@@ -65,7 +65,7 @@ export default function Pagination({
           type="button"
           onClick={() => onPageChange(page - 1)}
           disabled={page === 0}
-          className="p-1.5 rounded-xl border border-[#E2DAD0] bg-white text-[#4A3E31] hover:bg-[#FAF7F2] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="p-1.5 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           title="Trang trước"
         >
           <ChevronLeft className="w-4 h-4" />
@@ -79,10 +79,10 @@ export default function Pagination({
                 key={p}
                 type="button"
                 onClick={() => onPageChange(p - 1)}
-                className={`min-w-8 h-8 px-2 rounded-xl text-xs font-semibold transition-all ${
+                className={`min-w-8 h-8 px-2.5 rounded-xl text-xs font-semibold transition-all ${
                   isActive
-                    ? 'bg-[#F6B779] text-[#2C241E] shadow-2xs'
-                    : 'bg-white border border-[#E2DAD0] text-[#4A3E31] hover:bg-[#FAF7F2]'
+                    ? 'bg-amber-400 text-slate-950 font-bold shadow-xs border border-amber-300'
+                    : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
                 }`}
               >
                 {p}
@@ -95,7 +95,7 @@ export default function Pagination({
           type="button"
           onClick={() => onPageChange(page + 1)}
           disabled={page >= totalPages - 1}
-          className="p-1.5 rounded-xl border border-[#E2DAD0] bg-white text-[#4A3E31] hover:bg-[#FAF7F2] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="p-1.5 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           title="Trang sau"
         >
           <ChevronRight className="w-4 h-4" />
@@ -105,7 +105,7 @@ export default function Pagination({
           type="button"
           onClick={() => onPageChange(totalPages - 1)}
           disabled={page >= totalPages - 1}
-          className="p-1.5 rounded-xl border border-[#E2DAD0] bg-white text-[#4A3E31] hover:bg-[#FAF7F2] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="p-1.5 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           title="Trang cuối"
         >
           <ChevronsRight className="w-4 h-4" />

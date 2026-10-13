@@ -75,7 +75,7 @@ export default function UserManagementPage() {
       />
 
       {/* Table Card */}
-      <Card className="shadow-none border-slate-200 overflow-hidden">
+      <Card className="shadow-card border-slate-200/90 rounded-2xl overflow-hidden bg-white">
         <UserTable
           users={users}
           isLoading={isLoading}

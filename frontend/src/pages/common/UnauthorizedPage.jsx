@@ -4,7 +4,7 @@ import { ShieldAlert, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export default function UnauthorizedPage() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center p-6 text-center font-sans">
@@ -32,6 +32,18 @@ export default function UnauthorizedPage() {
             >
               <span>Vào Bảng điều khiển</span>
             </Link>
+          )}
+          {user && (
+            <button
+              type="button"
+              onClick={() => {
+                logout();
+                window.location.href = '/login';
+              }}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-semibold rounded-xl transition-all shadow-xs cursor-pointer"
+            >
+              <span>Đổi tài khoản</span>
+            </button>
           )}
         </div>
       </div>

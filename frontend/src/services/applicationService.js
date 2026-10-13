@@ -10,7 +10,12 @@ const applicationService = {
    * @param {Object} data - { jobListingId, cvUrl, coverLetter }
    */
   apply: async (data) => {
-    return await axiosClient.post('/api/applications', data);
+    const payload = {
+      jobListingId: data.jobListingId,
+      resumeUrl: data.resumeUrl || data.cvUrl,
+      coverLetter: data.coverLetter || '',
+    };
+    return await axiosClient.post('/api/applications', payload);
   },
 
   /**
@@ -47,12 +52,13 @@ const applicationService = {
 
   /**
    * Recruiter cập nhật trạng thái đơn (APPLIED -> SHORTLISTED / REJECTED...)
+   * Backend Controller: @PatchMapping("/{id}/status") @RequestParam("value") ApplicationStatus value
    * @param {number|string} id
    * @param {string} status - APPLIED | SHORTLISTED | INTERVIEWING | OFFERED | REJECTED
    */
   updateStatus: async (id, status) => {
     return await axiosClient.patch(`/api/applications/${id}/status`, null, {
-      params: { status },
+      params: { value: status },
     });
   },
 };

@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import authService from '../services/authService';
 import { validateEmail, validatePassword, validateFullName } from '../utils/validators';
+import { resolveRedirectPath } from '../routes/routeUtils';
 
 export function useLogin() {
   const { login, register } = useAuth();
@@ -95,14 +96,8 @@ export function useLogin() {
         );
         setSuccessMessage('Đăng nhập thành công! Đang chuyển hướng...');
         setTimeout(() => {
-          const fromLocation = location.state?.from?.pathname;
-          if (fromLocation) {
-            navigate(fromLocation, { replace: true });
-          } else if (res.user?.role === 'ADMIN' || res.user?.role === 'RECRUITER') {
-            navigate('/admin', { replace: true });
-          } else {
-            navigate('/', { replace: true });
-          }
+          const targetPath = resolveRedirectPath(res.user?.role, location.state?.from);
+          navigate(targetPath, { replace: true });
         }, 350);
       } else {
         await register({
@@ -111,11 +106,14 @@ export function useLogin() {
           fullName: formData.fullName,
         });
         setSuccessMessage('Đăng ký thành công! Đang đăng nhập hệ thống...');
-        await login(
+        const res = await login(
           { email: formData.email, password: formData.password },
           formData.rememberMe
         );
-        setTimeout(() => navigate('/', { replace: true }), 350);
+        setTimeout(() => {
+          const targetPath = resolveRedirectPath(res.user?.role, location.state?.from);
+          navigate(targetPath, { replace: true });
+        }, 350);
       }
     } catch (err) {
       const parsed = authService.parseApiError(err);

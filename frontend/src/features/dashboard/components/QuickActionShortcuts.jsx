@@ -1,72 +1,87 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, Calendar, Users, Building2, CheckCircle2 } from 'lucide-react';
+import { FileText, Calendar, Users, Building2, CheckCircle2, Zap } from 'lucide-react';
 import Card from '../../../components/common/Card';
 
 export default function QuickActionShortcuts({ isAdmin }) {
   return (
-    <Card className="shadow-none border-slate-200 p-6 space-y-4">
+    <Card className="shadow-card border-slate-200/90 rounded-2xl p-6 space-y-4">
       <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-        <h2 className="text-sm font-bold text-slate-900">Lối tắt thao tác nhanh</h2>
+        <div className="flex items-center gap-2">
+          <Zap className="w-4 h-4 text-amber-600" />
+          <h2 className="text-sm font-bold text-slate-900">Lối tắt thao tác nhanh</h2>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3 text-xs">
         <Link
           to="/admin/applications"
-          className="p-4 bg-slate-50 hover:bg-white border border-slate-200 hover:border-slate-400 rounded-xl transition-all"
+          className="p-4 bg-slate-50/70 hover:bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-2xs rounded-2xl transition-all group"
         >
-          <FileText className="w-5 h-5 text-slate-700 mb-2" />
-          <span className="font-semibold text-slate-900 block">Duyệt Đơn Ứng Tuyển</span>
-          <span className="text-[11px] text-slate-500">Xem hồ sơ & lọc status</span>
+          <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-900 flex items-center justify-center mb-2.5 transition-transform group-hover:scale-105">
+            <FileText className="w-4 h-4" />
+          </div>
+          <span className="font-bold text-slate-900 block group-hover:text-amber-900 transition-colors">Duyệt Đơn Ứng Tuyển</span>
+          <span className="text-[11px] text-slate-400 mt-0.5 block">Xem hồ sơ & lọc trạng thái</span>
         </Link>
 
         <Link
           to="/admin/interviews"
-          className="p-4 bg-slate-50 hover:bg-white border border-slate-200 hover:border-slate-400 rounded-xl transition-all"
+          className="p-4 bg-slate-50/70 hover:bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-2xs rounded-2xl transition-all group"
         >
-          <Calendar className="w-5 h-5 text-slate-700 mb-2" />
-          <span className="font-semibold text-slate-900 block">Lên Lịch Phỏng Vấn</span>
-          <span className="text-[11px] text-slate-500">Tạo slot & chấm feedback</span>
+          <div className="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-900 flex items-center justify-center mb-2.5 transition-transform group-hover:scale-105">
+            <Calendar className="w-4 h-4" />
+          </div>
+          <span className="font-bold text-slate-900 block group-hover:text-amber-900 transition-colors">Lên Lịch Phỏng Vấn</span>
+          <span className="text-[11px] text-slate-400 mt-0.5 block">Tạo slot & chấm feedback</span>
         </Link>
 
         {isAdmin ? (
           <>
             <Link
               to="/admin/users"
-              className="p-4 bg-slate-50 hover:bg-white border border-slate-200 hover:border-slate-400 rounded-xl transition-all"
+              className="p-4 bg-slate-50/70 hover:bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-2xs rounded-2xl transition-all group"
             >
-              <Users className="w-5 h-5 text-slate-700 mb-2" />
-              <span className="font-semibold text-slate-900 block">Quản Lý Người Dùng</span>
-              <span className="text-[11px] text-slate-500">Cấp quyền & khóa user</span>
+              <div className="w-8 h-8 rounded-xl bg-purple-100 text-purple-900 flex items-center justify-center mb-2.5 transition-transform group-hover:scale-105">
+                <Users className="w-4 h-4" />
+              </div>
+              <span className="font-bold text-slate-900 block group-hover:text-amber-900 transition-colors">Quản Lý Người Dùng</span>
+              <span className="text-[11px] text-slate-400 mt-0.5 block">Cấp quyền & khóa user</span>
             </Link>
 
             <Link
               to="/admin/companies"
-              className="p-4 bg-slate-50 hover:bg-white border border-slate-200 hover:border-slate-400 rounded-xl transition-all"
+              className="p-4 bg-slate-50/70 hover:bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-2xs rounded-2xl transition-all group"
             >
-              <Building2 className="w-5 h-5 text-slate-700 mb-2" />
-              <span className="font-semibold text-slate-900 block">Quản Lý Công Ty</span>
-              <span className="text-[11px] text-slate-500">Cập nhật logo & địa điểm</span>
+              <div className="w-8 h-8 rounded-xl bg-sky-100 text-sky-900 flex items-center justify-center mb-2.5 transition-transform group-hover:scale-105">
+                <Building2 className="w-4 h-4" />
+              </div>
+              <span className="font-bold text-slate-900 block group-hover:text-amber-900 transition-colors">Quản Lý Doanh Nghiệp</span>
+              <span className="text-[11px] text-slate-400 mt-0.5 block">Cập nhật logo & địa điểm</span>
             </Link>
           </>
         ) : (
           <>
             <Link
               to="/admin/shortlists"
-              className="p-4 bg-slate-50 hover:bg-white border border-slate-200 hover:border-slate-400 rounded-xl transition-all"
+              className="p-4 bg-slate-50/70 hover:bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-2xs rounded-2xl transition-all group"
             >
-              <Users className="w-5 h-5 text-slate-700 mb-2" />
-              <span className="font-semibold text-slate-900 block">Danh Sách Shortlist</span>
-              <span className="text-[11px] text-slate-500">Ứng viên tiềm năng</span>
+              <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-900 flex items-center justify-center mb-2.5 transition-transform group-hover:scale-105">
+                <Users className="w-4 h-4" />
+              </div>
+              <span className="font-bold text-slate-900 block group-hover:text-amber-900 transition-colors">Danh Sách Shortlist</span>
+              <span className="text-[11px] text-slate-400 mt-0.5 block">Ứng viên tiềm năng</span>
             </Link>
 
             <Link
               to="/admin/offers"
-              className="p-4 bg-slate-50 hover:bg-white border border-slate-200 hover:border-slate-400 rounded-xl transition-all"
+              className="p-4 bg-slate-50/70 hover:bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-2xs rounded-2xl transition-all group"
             >
-              <CheckCircle2 className="w-5 h-5 text-slate-700 mb-2" />
-              <span className="font-semibold text-slate-900 block">Quản Lý Offers</span>
-              <span className="text-[11px] text-slate-500">Gửi thư mời nhận việc</span>
+              <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-900 flex items-center justify-center mb-2.5 transition-transform group-hover:scale-105">
+                <CheckCircle2 className="w-4 h-4" />
+              </div>
+              <span className="font-bold text-slate-900 block group-hover:text-amber-900 transition-colors">Quản Lý Offers</span>
+              <span className="text-[11px] text-slate-400 mt-0.5 block">Gửi thư mời nhận việc</span>
             </Link>
           </>
         )}

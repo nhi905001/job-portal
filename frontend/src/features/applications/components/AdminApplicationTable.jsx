@@ -44,18 +44,21 @@ export default function AdminApplicationTable({
             applications.map((app) => (
               <tr key={app.id} className="hover:bg-slate-50/70 transition-colors">
                 <td className="px-5 py-4">
-                  <span className="font-semibold text-slate-900 block">{app.user?.fullName || 'Ứng viên'}</span>
-                  <span className="text-slate-500 text-[11px]">{app.user?.email}</span>
+                  <span className="font-semibold text-slate-900 block">{app.candidate?.fullName || app.user?.fullName || 'Ứng viên'}</span>
+                  <span className="text-slate-500 text-[11px]">{app.candidate?.email || app.user?.email}</span>
                 </td>
 
                 <td className="px-5 py-4 font-medium text-slate-800">
-                  {app.jobListing?.title || 'Vị trí'}
+                  <span className="font-semibold text-slate-900 block">{app.jobListing?.title || 'Vị trí'}</span>
+                  {app.jobListing?.company?.name && (
+                    <span className="text-slate-500 text-[11px] block">{app.jobListing.company.name}</span>
+                  )}
                 </td>
 
                 <td className="px-5 py-4">
-                  {app.cvUrl ? (
+                  {app.resumeUrl || app.cvUrl ? (
                     <a
-                      href={fileService.getFullFileUrl(app.cvUrl)}
+                      href={fileService.getFullFileUrl(app.resumeUrl || app.cvUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg font-medium text-slate-800"
@@ -70,7 +73,7 @@ export default function AdminApplicationTable({
                 </td>
 
                 <td className="px-5 py-4 text-slate-500 whitespace-nowrap">
-                  {formatDate(app.createdAt)}
+                  {formatDate(app.appliedAt || app.createdAt)}
                 </td>
 
                 <td className="px-5 py-4">

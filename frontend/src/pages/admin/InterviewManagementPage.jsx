@@ -72,7 +72,7 @@ export default function InterviewManagementPage() {
       </div>
 
       {/* Table Card */}
-      <Card className="shadow-none border-slate-200 overflow-hidden">
+      <Card className="shadow-card border-slate-200/90 rounded-2xl overflow-hidden bg-white">
         <InterviewSlotTable
           slots={slots}
           isLoading={isLoading}

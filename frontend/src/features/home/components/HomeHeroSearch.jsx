@@ -1,35 +1,128 @@
 import React from 'react';
-import { Search } from 'lucide-react';
-import Button from '../../../components/common/Button';
+import { Search, MapPin, SlidersHorizontal, X } from 'lucide-react';
 
-export default function HomeHeroSearch({ searchInput, onSearchChange, onSearchSubmit }) {
+export default function HomeHeroSearch({
+  searchInput,
+  onSearchChange,
+  onSearchSubmit,
+  selectedLocation,
+  onLocationChange,
+  locations = [],
+  activeFilterCount = 0,
+  activeFilters = [],
+  onRemoveFilter,
+  onClearAll,
+  onQuickFilter,
+}) {
   return (
-    <section className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-10 text-center max-w-4xl mx-auto">
-      <span className="inline-block text-xs font-medium tracking-wider uppercase text-slate-700 bg-slate-100 border border-slate-200 px-3 py-1 rounded-full mb-3">
-        Cổng tuyển dụng & kết nối nghề nghiệp
-      </span>
-      <h1 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-        Tìm kiếm công việc mơ ước của bạn
-      </h1>
-      <p className="mt-2 text-xs sm:text-sm text-slate-500 max-w-lg mx-auto">
-        Khám phá hàng trăm cơ hội việc làm hấp dẫn từ các doanh nghiệp hàng đầu tại Việt Nam.
-      </p>
+    <div className="space-y-4">
+      {/* Title */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+        <div>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            Job Board
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1 font-normal">
+            Khám phá cơ hội nghề nghiệp hàng đầu từ các công ty công nghệ và doanh nghiệp uy tín.
+          </p>
+        </div>
+      </div>
 
-      <form onSubmit={onSearchSubmit} className="mt-6 flex flex-col sm:flex-row gap-2.5 max-w-2xl mx-auto">
-        <div className="flex-1 relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+      {/* Main Search Toolbar (Exact match to reference mockup!) */}
+      <form
+        onSubmit={onSearchSubmit}
+        className="bg-white border border-slate-200/90 rounded-2xl p-2 sm:p-2.5 shadow-2xs flex flex-col md:flex-row items-stretch md:items-center gap-2"
+      >
+        {/* Search Input */}
+        <div className="flex-1 relative flex items-center min-w-0">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 shrink-0" />
           <input
             type="text"
             value={searchInput}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Nhập tiêu đề công việc, kỹ năng, vị trí ứng tuyển..."
-            className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-slate-900"
+            placeholder="Search by job title, company, keywords"
+            className="w-full pl-10 pr-3 py-2.5 bg-transparent text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none"
           />
         </div>
-        <Button type="submit" variant="primary" size="md" className="px-6 py-3">
-          Tìm việc làm
-        </Button>
+
+        {/* Divider on desktop */}
+        <div className="hidden md:block w-px h-8 bg-slate-200 mx-1" />
+
+        {/* Location Dropdown */}
+        <div className="relative flex items-center md:w-56 shrink-0">
+          <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <select
+            value={selectedLocation || ''}
+            onChange={(e) => onLocationChange?.(e.target.value)}
+            className="w-full pl-9 pr-8 py-2.5 bg-slate-50 md:bg-transparent rounded-xl text-xs sm:text-sm text-slate-700 hover:text-slate-900 focus:outline-none cursor-pointer appearance-none truncate"
+          >
+            <option value="">Anywhere (Toàn quốc)</option>
+            <option value="Hà Nội">Hà Nội</option>
+            <option value="Hồ Chí Minh">TP. Hồ Chí Minh</option>
+            <option value="Đà Nẵng">Đà Nẵng</option>
+            <option value="Cần Thơ">Cần Thơ</option>
+            <option value="Remote">Làm việc từ xa (Remote)</option>
+            {locations.map((loc) => (
+              <option key={loc.id || loc} value={loc.city || loc}>
+                {loc.city || loc}
+              </option>
+            ))}
+          </select>
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-xs">
+            ▾
+          </div>
+        </div>
+
+        {/* Search & Submit Button */}
+        <button
+          type="submit"
+          className="bg-amber-400 hover:bg-amber-500 active:bg-amber-600 text-slate-950 font-bold text-xs sm:text-sm px-6 py-2.5 rounded-xl shadow-xs transition-colors shrink-0 flex items-center justify-center gap-2"
+        >
+          <Search className="w-4 h-4 text-slate-950" />
+          <span>Tìm việc</span>
+        </button>
       </form>
-    </section>
+
+      {/* Active Filter Chips Row (as in mockup: ✕ Design, ✕ Regular, ✕ Full time, Clear All) */}
+      <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
+        {/* Quick presets & active tags */}
+        {activeFilters.length > 0 ? (
+          <>
+            {activeFilters.map((tag, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => onRemoveFilter?.(tag.type, tag.id)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200/80 transition-colors font-medium group"
+              >
+                <X className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-700" />
+                <span>{tag.label}</span>
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={onClearAll}
+              className="text-slate-500 hover:text-slate-900 font-semibold px-2 py-1 text-xs transition-colors underline-offset-4 hover:underline"
+            >
+              Clear All
+            </button>
+          </>
+        ) : (
+          <div className="flex flex-wrap items-center gap-2 text-slate-400 text-xs">
+            <span className="text-[11px] font-medium text-slate-400">Gợi ý tìm kiếm:</span>
+            {['Design', 'Developer', 'Full time', 'Remote', 'Marketing'].map((suggestion) => (
+              <button
+                key={suggestion}
+                type="button"
+                onClick={() => onQuickFilter?.(suggestion)}
+                className="px-3 py-1 rounded-full bg-white hover:bg-amber-50 hover:text-amber-900 hover:border-amber-300 border border-slate-200/90 text-slate-600 text-[11px] transition-colors"
+              >
+                {suggestion}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

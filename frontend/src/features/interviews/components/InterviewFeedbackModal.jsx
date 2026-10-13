@@ -29,7 +29,9 @@ export default function InterviewFeedbackModal({
           <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
             <div>
               <h3 className="text-base font-bold text-slate-900">Đánh Giá Sau Phỏng Vấn</h3>
-              <p className="text-xs text-slate-500 mt-0.5">Ứng viên: {slot?.application?.user?.fullName}</p>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Ứng viên: {slot?.jobApplication?.candidate?.fullName || slot?.application?.user?.fullName || 'Ứng viên'}
+              </p>
             </div>
             <button type="button" onClick={onClose} className="p-1 text-slate-400 hover:text-slate-700 rounded-lg">
               <X className="w-5 h-5" />

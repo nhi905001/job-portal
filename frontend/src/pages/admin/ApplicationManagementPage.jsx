@@ -49,11 +49,16 @@ export default function ApplicationManagementPage() {
     <div className="space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-          Quản Lý Đơn Ứng Tuyển (Applications)
-        </h1>
-        <p className="text-xs text-slate-500 mt-1">
-          Xem xét hồ sơ ứng viên, lọc theo tin tuyển dụng, đưa vào Shortlist hoặc cập nhật trạng thái
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Quản Lý Đơn Ứng Tuyển
+          </h1>
+          <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[11px] font-bold border border-amber-200/60">
+            Hồ sơ
+          </span>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500 mt-1">
+          Xem xét hồ sơ ứng viên, lọc theo tin tuyển dụng, đưa vào Shortlist hoặc cập nhật trạng thái.
         </p>
       </div>
 
@@ -68,7 +73,7 @@ export default function ApplicationManagementPage() {
       />
 
       {/* Table Card */}
-      <Card className="shadow-none border-slate-200 overflow-hidden">
+      <Card className="shadow-card border-slate-200/90 rounded-2xl overflow-hidden bg-white">
         <AdminApplicationTable
           applications={applications}
           isLoading={isLoading}
@@ -112,7 +117,7 @@ export default function ApplicationManagementPage() {
       <ConfirmDialog
         isOpen={rejectDialogOpen}
         title="Từ Chối Đơn Ứng Tuyển"
-        message={`Bạn có chắc chắn muốn từ chối đơn ứng tuyển của "${appToReject?.user?.fullName}"? Trạng thái sẽ được chuyển sang REJECTED.`}
+        message={`Bạn có chắc chắn muốn từ chối đơn ứng tuyển của "${appToReject?.candidate?.fullName || appToReject?.user?.fullName || 'ứng viên này'}"? Trạng thái sẽ được chuyển sang REJECTED.`}
         confirmText="Xác nhận từ chối"
         confirmVariant="danger"
         isLoading={isRejecting}

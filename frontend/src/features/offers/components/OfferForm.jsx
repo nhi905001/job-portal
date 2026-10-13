@@ -26,7 +26,7 @@ export default function OfferForm({
         >
           {interviewingApps.map((app) => (
             <option key={app.id} value={app.id}>
-              {app.user?.fullName} ({app.user?.email}) — {app.jobListing?.title}
+              {app.candidate?.fullName || app.user?.fullName || 'Ứng viên'} ({app.candidate?.email || app.user?.email || '—'}) — {app.jobListing?.title}
             </option>
           ))}
         </select>

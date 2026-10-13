@@ -7,7 +7,8 @@ import OfferStatusBadge from './OfferStatusBadge';
 import { formatSalary, formatDate } from '../../../utils/formatters';
 
 export default function MyOfferCard({ offer, onRespond }) {
-  const job = offer.application?.jobListing;
+  const app = offer.jobApplication || offer.application;
+  const job = app?.jobListing;
   const company = job?.company;
   const isPending = offer.status === 'PENDING';
 
@@ -44,8 +45,8 @@ export default function MyOfferCard({ offer, onRespond }) {
           <span className="font-semibold text-slate-800">{formatDate(offer.startDate)}</span>
         </div>
         <div>
-          <span className="text-slate-400 block text-[11px]">Hạn chót phản hồi:</span>
-          <span className="font-semibold text-slate-800">{formatDate(offer.expiryDate)}</span>
+          <span className="text-slate-400 block text-[11px]">Ngày nhận Offer:</span>
+          <span className="font-semibold text-slate-800">{formatDate(offer.createdAt)}</span>
         </div>
       </div>
 

@@ -6,9 +6,10 @@ import companyService from '../services/companyService';
 
 const initialJobForm = {
   title: '',
+  companyId: '',
   jobTypeId: '',
   industryId: '',
-  companyLocationId: '',
+  locationId: '',
   salaryMin: '',
   salaryMax: '',
   deadline: '',
@@ -31,17 +32,22 @@ export function useJobs() {
   // Filters
   const [keyword, setKeyword] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [industryFilter, setIndustryFilter] = useState('');
+  const [jobTypeFilter, setJobTypeFilter] = useState('');
+  const [companyFilter, setCompanyFilter] = useState('');
 
   // Dropdown options
   const [industries, setIndustries] = useState([]);
   const [jobTypes, setJobTypes] = useState([]);
   const [locations, setLocations] = useState([]);
+  const [companies, setCompanies] = useState([]);
 
   // Create / Edit Modal State
   const [jobModalOpen, setJobModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingJobId, setEditingJobId] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoadingDetail, setIsLoadingDetail] = useState(false);
   const [jobForm, setJobForm] = useState(initialJobForm);
 
   // Delete Confirm Dialog State
@@ -52,17 +58,26 @@ export function useJobs() {
   useEffect(() => {
     async function loadOptions() {
       try {
-        const [indRes, typeRes, locRes] = await Promise.all([
+        const promises = [
           companyService.getIndustries({ size: 100 }),
           companyService.getJobTypes({ size: 100 }),
           companyService.getLocations({
             companyId: user?.role === 'RECRUITER' ? user?.company?.id : undefined,
-            size: 100,
+            size: 200,
           }),
-        ]);
+        ];
+
+        if (user?.role === 'ADMIN') {
+          promises.push(companyService.getCompanies({ size: 200 }));
+        }
+
+        const [indRes, typeRes, locRes, compRes] = await Promise.all(promises);
         setIndustries(indRes?.content || []);
         setJobTypes(typeRes?.content || []);
         setLocations(locRes?.content || []);
+        if (compRes) {
+          setCompanies(compRes?.content || []);
+        }
       } catch (err) {
         console.error('Lỗi tải options:', err);
       }
@@ -76,6 +91,9 @@ export function useJobs() {
       const params = {
         keyword: keyword.trim(),
         status: statusFilter || undefined,
+        industryId: industryFilter || undefined,
+        jobTypeId: jobTypeFilter || undefined,
+        companyId: user?.role === 'ADMIN' ? (companyFilter || undefined) : undefined,
         recruiterId: user?.role === 'RECRUITER' ? user.id : undefined,
         page,
         size: 10,
@@ -92,58 +110,139 @@ export function useJobs() {
     } finally {
       setIsLoading(false);
     }
-  }, [keyword, statusFilter, user, page, showToast]);
+  }, [keyword, statusFilter, industryFilter, jobTypeFilter, companyFilter, user, page, showToast]);
 
   useEffect(() => {
     fetchJobs();
   }, [fetchJobs]);
 
   const handleOpenCreateModal = () => {
-    setJobForm(initialJobForm);
+    setJobForm({
+      ...initialJobForm,
+      companyId: user?.role === 'RECRUITER' ? String(user?.company?.id || '') : '',
+    });
     setIsEditing(false);
     setEditingJobId(null);
     setJobModalOpen(true);
   };
 
-  const handleOpenEditModal = (job) => {
-    setJobForm({
-      title: job.title || '',
-      jobTypeId: job.jobType?.id ? String(job.jobType.id) : '',
-      industryId: job.industry?.id ? String(job.industry.id) : '',
-      companyLocationId: job.companyLocation?.id ? String(job.companyLocation.id) : '',
-      salaryMin: job.salaryMin != null ? String(job.salaryMin) : '',
-      salaryMax: job.salaryMax != null ? String(job.salaryMax) : '',
-      deadline: job.deadline ? job.deadline.split('T')[0] : '',
-      status: job.status || 'OPEN',
-      responsibilities: job.responsibilities || '',
-      requirements: job.requirements || '',
-      benefits: job.benefits || '',
-    });
+  const handleOpenEditModal = async (job) => {
     setIsEditing(true);
     setEditingJobId(job.id);
     setJobModalOpen(true);
+    setIsLoadingDetail(true);
+
+    try {
+      // Backend: GET /api/job-listings/{id} returns JobListingDetail { jobListing, description }
+      const detail = await jobService.getJobById(job.id);
+      const listing = detail?.jobListing || job;
+      const desc = detail?.description || {};
+
+      setJobForm({
+        title: listing.title || '',
+        companyId: listing.company?.id ? String(listing.company.id) : (user?.company?.id ? String(user.company.id) : ''),
+        jobTypeId: listing.jobType?.id ? String(listing.jobType.id) : '',
+        industryId: listing.industry?.id ? String(listing.industry.id) : '',
+        locationId: listing.location?.id ? String(listing.location.id) : (listing.companyLocation?.id ? String(listing.companyLocation.id) : ''),
+        salaryMin: listing.salaryMin != null ? String(listing.salaryMin) : '',
+        salaryMax: listing.salaryMax != null ? String(listing.salaryMax) : '',
+        deadline: listing.deadline ? listing.deadline.split('T')[0] : '',
+        status: listing.status || 'OPEN',
+        responsibilities: desc.responsibilities || '',
+        requirements: desc.requirements || '',
+        benefits: desc.benefits || '',
+      });
+    } catch (err) {
+      console.error('Lỗi tải chi tiết tin tuyển dụng:', err);
+      showToast('Không thể tải chi tiết mô tả tin tuyển dụng.', 'error');
+      // Fallback to table data
+      setJobForm({
+        title: job.title || '',
+        companyId: job.company?.id ? String(job.company.id) : '',
+        jobTypeId: job.jobType?.id ? String(job.jobType.id) : '',
+        industryId: job.industry?.id ? String(job.industry.id) : '',
+        locationId: job.location?.id ? String(job.location.id) : (job.companyLocation?.id ? String(job.companyLocation.id) : ''),
+        salaryMin: job.salaryMin != null ? String(job.salaryMin) : '',
+        salaryMax: job.salaryMax != null ? String(job.salaryMax) : '',
+        deadline: job.deadline ? job.deadline.split('T')[0] : '',
+        status: job.status || 'OPEN',
+        responsibilities: '',
+        requirements: '',
+        benefits: '',
+      });
+    } finally {
+      setIsLoadingDetail(false);
+    }
   };
 
   const handleFormChange = (field, value) => {
-    setJobForm((prev) => ({ ...prev, [field]: value }));
+    setJobForm((prev) => {
+      // If changing company as Admin, clear locationId if it doesn't belong to the new company
+      if (field === 'companyId') {
+        return { ...prev, [field]: value, locationId: '' };
+      }
+      return { ...prev, [field]: value };
+    });
   };
 
   const handleSaveJob = async (e) => {
     if (e) e.preventDefault();
+
     if (!jobForm.title.trim()) {
       showToast('Vui lòng nhập tiêu đề tin tuyển dụng', 'error');
       return;
     }
+    if (user?.role === 'ADMIN' && !jobForm.companyId) {
+      showToast('Vui lòng chọn doanh nghiệp tuyển dụng', 'error');
+      return;
+    }
+    if (!jobForm.industryId) {
+      showToast('Vui lòng chọn ngành nghề', 'error');
+      return;
+    }
+    if (!jobForm.jobTypeId) {
+      showToast('Vui lòng chọn loại hình công việc', 'error');
+      return;
+    }
+    if (!jobForm.locationId) {
+      showToast('Vui lòng chọn địa điểm làm việc', 'error');
+      return;
+    }
+    if (!jobForm.deadline) {
+      showToast('Vui lòng chọn hạn nộp hồ sơ', 'error');
+      return;
+    }
+    if (!jobForm.responsibilities.trim()) {
+      showToast('Vui lòng điền trách nhiệm công việc', 'error');
+      return;
+    }
+    if (!jobForm.requirements.trim()) {
+      showToast('Vui lòng điền yêu cầu ứng viên', 'error');
+      return;
+    }
+
+    if (jobForm.salaryMin && jobForm.salaryMax && Number(jobForm.salaryMin) > Number(jobForm.salaryMax)) {
+      showToast('Lương tối thiểu không được lớn hơn lương tối đa', 'error');
+      return;
+    }
+
     try {
       setIsSaving(true);
       const payload = {
-        ...jobForm,
+        title: jobForm.title.trim(),
+        companyId: user?.role === 'ADMIN' ? (jobForm.companyId ? Number(jobForm.companyId) : undefined) : undefined,
         jobTypeId: Number(jobForm.jobTypeId),
         industryId: Number(jobForm.industryId),
-        companyLocationId: Number(jobForm.companyLocationId),
+        locationId: Number(jobForm.locationId),
         salaryMin: jobForm.salaryMin ? Number(jobForm.salaryMin) : null,
         salaryMax: jobForm.salaryMax ? Number(jobForm.salaryMax) : null,
+        deadline: jobForm.deadline,
+        status: jobForm.status || 'OPEN',
+        responsibilities: jobForm.responsibilities.trim(),
+        requirements: jobForm.requirements.trim(),
+        benefits: jobForm.benefits?.trim() || null,
       };
+
       if (isEditing) {
         await jobService.updateJob(editingJobId, payload);
         showToast('Cập nhật tin tuyển dụng thành công!', 'success');
@@ -183,7 +282,17 @@ export function useJobs() {
     }
   };
 
+  const handleResetFilters = () => {
+    setKeyword('');
+    setStatusFilter('');
+    setIndustryFilter('');
+    setJobTypeFilter('');
+    setCompanyFilter('');
+    setPage(0);
+  };
+
   return {
+    user,
     jobs,
     page,
     totalPages,
@@ -191,12 +300,17 @@ export function useJobs() {
     isLoading,
     keyword,
     statusFilter,
+    industryFilter,
+    jobTypeFilter,
+    companyFilter,
     industries,
     jobTypes,
     locations,
+    companies,
     jobModalOpen,
     isEditing,
     isSaving,
+    isLoadingDetail,
     jobForm,
     deleteDialogOpen,
     jobToDelete,
@@ -204,6 +318,9 @@ export function useJobs() {
     setPage,
     setKeyword,
     setStatusFilter,
+    setIndustryFilter,
+    setJobTypeFilter,
+    setCompanyFilter,
     setJobModalOpen,
     setDeleteDialogOpen,
     handleOpenCreateModal,
@@ -212,6 +329,7 @@ export function useJobs() {
     handleSaveJob,
     handleOpenDelete,
     handleConfirmDelete,
+    handleResetFilters,
     refetchJobs: fetchJobs,
   };
 }

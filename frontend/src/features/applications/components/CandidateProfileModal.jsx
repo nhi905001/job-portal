@@ -47,10 +47,10 @@ export default function CandidateProfileModal({
                   )}
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900">{app?.user?.fullName}</h4>
+                  <h4 className="text-sm font-bold text-slate-900">{app?.candidate?.fullName || app?.user?.fullName || 'Ứng viên'}</h4>
                   <div className="flex items-center gap-1.5 text-slate-500 mt-0.5">
                     <Mail className="w-3.5 h-3.5 text-slate-400" />
-                    <span>{app?.user?.email}</span>
+                    <span>{app?.candidate?.email || app?.user?.email}</span>
                   </div>
                   {profile?.phone && (
                     <div className="flex items-center gap-1.5 text-slate-500 mt-0.5">
@@ -75,17 +75,32 @@ export default function CandidateProfileModal({
                 </p>
               </div>
 
-              {app?.cvUrl && (
+              {(app?.resumeUrl || app?.cvUrl) && (
                 <div className="pt-2">
                   <a
-                    href={fileService.getFullFileUrl(app.cvUrl)}
+                    href={fileService.getFullFileUrl(app.resumeUrl || app.cvUrl)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-2.5 px-4 bg-slate-900 text-white rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-slate-800 transition-colors"
+                    className="w-full py-2.5 px-4 bg-amber-400 hover:bg-amber-500 text-slate-950 rounded-xl font-bold flex items-center justify-center gap-2 shadow-xs transition-colors"
                   >
-                    <FileText className="w-4 h-4" />
-                    <span>Mở tệp CV đính kèm</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
+                    <FileText className="w-4 h-4 text-slate-950" />
+                    <span>Mở tệp CV ứng tuyển</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-slate-950" />
+                  </a>
+                </div>
+              )}
+
+              {profile?.attachmentUrl && (
+                <div className="pt-1">
+                  <a
+                    href={fileService.getFullFileUrl(profile.attachmentUrl)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-2 px-4 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-semibold flex items-center justify-center gap-2 border border-slate-200 transition-colors"
+                  >
+                    <FileText className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Xem Portfolio / Chứng chỉ đính kèm</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
                   </a>
                 </div>
               )}

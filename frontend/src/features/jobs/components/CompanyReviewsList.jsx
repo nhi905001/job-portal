@@ -24,7 +24,7 @@ export default function CompanyReviewsList({ reviews }) {
         {reviews.map((rev) => (
           <div key={rev.id} className="p-3.5 bg-slate-50 rounded-xl text-xs space-y-1.5">
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-slate-900">{rev.user?.fullName || 'Ứng viên ẩn danh'}</span>
+              <span className="font-semibold text-slate-900">{rev.reviewerName || rev.user?.fullName || 'Ứng viên ẩn danh'}</span>
               <span className="text-[11px] text-slate-400">{formatDate(rev.createdAt)}</span>
             </div>
 

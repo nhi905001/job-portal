@@ -103,6 +103,7 @@ export function useJobDetail() {
       setIsSubmittingApp(true);
       await applicationService.apply({
         jobListingId: id,
+        resumeUrl: cvUrl,
         cvUrl,
         coverLetter: coverLetter.trim(),
       });

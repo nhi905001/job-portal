@@ -43,13 +43,13 @@ export default function MyApplicationCard({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-slate-50 rounded-xl text-xs">
         <div>
           <span className="text-slate-400 block text-[11px]">Ngày nộp đơn:</span>
-          <span className="font-medium text-slate-800">{formatDate(app.createdAt)}</span>
+          <span className="font-medium text-slate-800">{formatDate(app.appliedAt || app.createdAt)}</span>
         </div>
         <div>
           <span className="text-slate-400 block text-[11px]">CV đã đính kèm:</span>
-          {app.cvUrl ? (
+          {app.resumeUrl || app.cvUrl ? (
             <a
-              href={fileService.getFullFileUrl(app.cvUrl)}
+              href={fileService.getFullFileUrl(app.resumeUrl || app.cvUrl)}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-slate-900 font-semibold hover:underline"

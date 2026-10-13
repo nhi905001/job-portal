@@ -50,7 +50,7 @@ export default function OfferManagementPage() {
       </div>
 
       {/* Main Table Card */}
-      <Card className="shadow-none border-slate-200 overflow-hidden">
+      <Card className="shadow-card border-slate-200/90 rounded-2xl overflow-hidden bg-white">
         <OfferTable offers={offers} isLoading={isLoading} />
 
         <div className="px-4 py-2 border-t border-slate-100 bg-slate-50/50">

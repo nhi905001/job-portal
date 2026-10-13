@@ -3,7 +3,7 @@ import React from 'react';
 export default function Card({ children, className = '', ...props }) {
   return (
     <div
-      className={`bg-white border border-slate-200 rounded-xl transition-all ${className}`}
+      className={`bg-white border border-slate-200/80 rounded-2xl transition-all ${className}`}
       {...props}
     >
       {children}
@@ -29,7 +29,7 @@ Card.Body = function CardBody({ children, className = '', ...props }) {
 
 Card.Footer = function CardFooter({ children, className = '', ...props }) {
   return (
-    <div className={`p-4 sm:p-5 border-t border-slate-100 bg-slate-50/60 rounded-b-xl ${className}`} {...props}>
+    <div className={`p-4 sm:p-5 border-t border-slate-100 bg-slate-50/50 rounded-b-2xl ${className}`} {...props}>
       {children}
     </div>
   );

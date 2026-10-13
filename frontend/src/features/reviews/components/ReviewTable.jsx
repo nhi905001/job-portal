@@ -3,7 +3,11 @@ import { MessageSquare, User, Building2, Trash2, Loader2 } from 'lucide-react';
 import StarRating from './StarRating';
 import { formatDate } from '../../../utils/formatters';
 
-export default function ReviewTable({ reviews, isLoading, onDeleteClick }) {
+export default function ReviewTable({ reviews, companies = [], isLoading, onDeleteClick }) {
+  const companyMap = React.useMemo(() => {
+    return Object.fromEntries(companies.map((c) => [c.id, c.name]));
+  }, [companies]);
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-left text-xs">
@@ -39,15 +43,15 @@ export default function ReviewTable({ reviews, isLoading, onDeleteClick }) {
                 <td className="px-5 py-4">
                   <div className="font-semibold text-slate-900 flex items-center gap-1.5">
                     <User className="w-3.5 h-3.5 text-slate-500" />
-                    <span>{r.user?.fullName || 'Ứng viên'}</span>
+                    <span>{r.reviewerName || r.user?.fullName || 'Ứng viên'}</span>
                   </div>
-                  <span className="text-[11px] text-slate-500">{r.user?.email || '—'}</span>
+                  <span className="text-[11px] text-slate-500">{r.user?.email || 'Ứng viên ẩn danh'}</span>
                 </td>
 
                 <td className="px-5 py-4 font-semibold text-slate-800">
                   <div className="flex items-center gap-1.5">
                     <Building2 className="w-3.5 h-3.5 text-slate-500" />
-                    <span>{r.company?.name || `Công ty #${r.companyId}`}</span>
+                    <span>{companyMap[r.companyId] || r.company?.name || `Công ty #${r.companyId}`}</span>
                   </div>
                 </td>
 

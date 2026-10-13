@@ -13,7 +13,7 @@ export default function OfferTable({ offers, isLoading }) {
             <th className="px-5 py-3.5">Vị trí ứng tuyển</th>
             <th className="px-5 py-3.5">Mức lương đề xuất</th>
             <th className="px-5 py-3.5">Ngày nhận việc</th>
-            <th className="px-5 py-3.5">Hạn phản hồi</th>
+            <th className="px-5 py-3.5">Ngày gửi Offer</th>
             <th className="px-5 py-3.5">Trạng thái Offer</th>
           </tr>
         </thead>
@@ -37,8 +37,9 @@ export default function OfferTable({ offers, isLoading }) {
             </tr>
           ) : (
             offers.map((offer) => {
-              const candidate = offer.application?.user;
-              const job = offer.application?.jobListing;
+              const app = offer.jobApplication || offer.application;
+              const candidate = app?.candidate || app?.user;
+              const job = app?.jobListing;
 
               return (
                 <tr key={offer.id} className="hover:bg-slate-50/70 transition-colors">
@@ -50,7 +51,10 @@ export default function OfferTable({ offers, isLoading }) {
                   </td>
 
                   <td className="px-5 py-4 font-medium text-slate-800">
-                    {job?.title || 'Vị trí công việc'}
+                    <span className="font-semibold text-slate-900 block">{job?.title || 'Vị trí công việc'}</span>
+                    {job?.company?.name && (
+                      <span className="text-slate-500 text-[11px] block">{job.company.name}</span>
+                    )}
                   </td>
 
                   <td className="px-5 py-4 font-semibold text-emerald-700">
@@ -62,7 +66,7 @@ export default function OfferTable({ offers, isLoading }) {
                   </td>
 
                   <td className="px-5 py-4 text-slate-500">
-                    {formatDate(offer.expiryDate)}
+                    {formatDate(offer.createdAt)}
                   </td>
 
                   <td className="px-5 py-4">

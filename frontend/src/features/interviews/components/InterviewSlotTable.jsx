@@ -39,14 +39,17 @@ export default function InterviewSlotTable({
             </tr>
           ) : (
             slots.map((slot) => {
-              const bookedApp = slot.application;
-              const candidate = bookedApp?.user;
+              const bookedApp = slot.jobApplication || slot.application;
+              const candidate = bookedApp?.candidate || bookedApp?.user;
               const isBooked = !!bookedApp;
 
               return (
                 <tr key={slot.id} className="hover:bg-slate-50/70 transition-colors">
-                  <td className="px-5 py-4 font-semibold text-slate-900">
-                    {slot.jobListing?.title || 'Vị trí công việc'}
+                  <td className="px-5 py-4">
+                    <span className="font-semibold text-slate-900 block">{slot.jobListing?.title || 'Vị trí công việc'}</span>
+                    {slot.jobListing?.company?.name && (
+                      <span className="text-slate-500 text-[11px] block">{slot.jobListing.company.name}</span>
+                    )}
                   </td>
 
                   <td className="px-5 py-4">

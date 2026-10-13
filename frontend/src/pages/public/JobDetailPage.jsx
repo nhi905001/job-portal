@@ -63,8 +63,17 @@ export default function JobDetailPage() {
     );
   }
 
-  const job = jobDetail.jobListing || jobDetail;
-  const company = job?.company || job?.recruiter?.company;
+  const rawListing = jobDetail.jobListing || jobDetail;
+  const rawDesc = jobDetail.description || {};
+  const job = {
+    ...rawListing,
+    responsibilities: rawDesc.responsibilities || rawListing.responsibilities,
+    requirements: rawDesc.requirements || rawListing.requirements,
+    benefits: rawDesc.benefits || rawListing.benefits,
+    location: rawListing.location || rawListing.companyLocation,
+    company: rawListing.company || rawListing.recruiter?.company,
+  };
+  const company = job?.company;
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
