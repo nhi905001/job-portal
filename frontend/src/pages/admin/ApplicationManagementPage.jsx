@@ -57,7 +57,7 @@ export default function ApplicationManagementPage() {
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             Quản Lý Đơn Ứng Tuyển
           </h1>
-          <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${
+          <span className={`px-2.5 py-0.5 rounded-none text-[11px] font-normal border ${
             isAdmin
               ? 'bg-slate-100 text-slate-700 border-slate-200'
               : 'bg-amber-100 text-amber-900 border-amber-200/60'

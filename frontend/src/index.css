@@ -4,11 +4,11 @@
 
 @layer base {
   html {
-    font-family: 'Plus Jakarta Sans', 'Roboto', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    font-family: 'Open Sans', 'Roboto', Arial, sans-serif;
   }
   
   body {
-    font-family: 'Plus Jakarta Sans', 'Roboto', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    font-family: 'Open Sans', 'Roboto', Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-color: #F8F9FB;
@@ -35,23 +35,78 @@
   background: #CBD5E1;
 }
 
-/* Pulse radar effect seen in the reference mock for selected item */
-@keyframes pulse-ring {
-  0% {
-    transform: scale(0.85);
-    opacity: 0.9;
-  }
-  50% {
-    transform: scale(1.3);
-    opacity: 0.3;
-  }
-  100% {
-    transform: scale(1.6);
-    opacity: 0;
-  }
+/* ========================================================
+   Loại bỏ hoàn toàn tất cả hiệu ứng: đổ bóng, phát sáng, focus halo, animation, transition
+   ======================================================== */
+*,
+*::before,
+*::after {
+  --tw-shadow: 0 0 #0000 !important;
+  --tw-shadow-colored: 0 0 #0000 !important;
+  --tw-drop-shadow: drop-shadow(0 0 #0000) !important;
+  --tw-ring-shadow: none !important;
+  --tw-ring-offset-shadow: none !important;
+  --tw-ring-color: transparent !important;
+  text-shadow: none !important;
+  transition: none !important;
 }
 
-.animate-pulse-ring {
-  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+*:not(.animate-spin),
+*:not(.animate-spin)::before,
+*:not(.animate-spin)::after {
+  animation: none !important;
 }
+
+/* Xóa hoàn toàn hiệu ứng sáng màu khi nhấp/focus vào thanh search, ô input, dropdown, button */
+input,
+select,
+textarea,
+button,
+[type="text"],
+[type="search"],
+[type="password"],
+[type="email"],
+[type="number"],
+[type="tel"],
+[type="url"] {
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+input:focus,
+input:focus-visible,
+select:focus,
+select:focus-visible,
+textarea:focus,
+textarea:focus-visible,
+button:focus,
+button:focus-visible,
+[type="text"]:focus,
+[type="search"]:focus,
+[type="password"]:focus,
+[type="email"]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  --tw-ring-shadow: none !important;
+  --tw-ring-offset-shadow: none !important;
+  --tw-ring-color: transparent !important;
+  border-color: #cbd5e1 !important;
+}
+
+[class*="shadow"],
+[class*="shadow"]:hover,
+[class*="shadow"]:focus,
+[class*="shadow"]:active {
+  box-shadow: none !important;
+}
+
+[class*="ring-"],
+[class*="ring-"]:focus,
+[class*="ring-"]:focus-visible {
+  --tw-ring-shadow: none !important;
+  --tw-ring-offset-shadow: none !important;
+  box-shadow: none !important;
+}
+
 

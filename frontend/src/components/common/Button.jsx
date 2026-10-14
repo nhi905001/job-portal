@@ -1,13 +1,13 @@
 import React from 'react';
 
 const VARIANTS = {
-  primary: 'bg-amber-400 text-slate-950 hover:bg-amber-500 active:bg-amber-600 border-amber-400 font-semibold shadow-xs hover:shadow',
+  primary: 'bg-amber-400 text-slate-950 hover:bg-amber-500 active:bg-amber-600 border-amber-400 font-semibold',
   secondary: 'bg-slate-100 text-slate-800 hover:bg-slate-200 active:bg-slate-300 border-slate-200/80 font-medium',
-  outline: 'bg-white text-slate-700 hover:bg-amber-50/40 hover:text-amber-900 active:bg-slate-100 border-slate-200 font-medium shadow-2xs',
+  outline: 'bg-white text-slate-700 hover:bg-amber-50/40 hover:text-amber-900 active:bg-slate-100 border-slate-200 font-medium',
   ghost: 'bg-transparent text-slate-600 hover:bg-slate-100/80 active:bg-slate-200 border-transparent font-medium',
   danger: 'bg-rose-600 text-white hover:bg-rose-700 active:bg-rose-800 border-rose-600 font-medium',
-  accent: 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 hover:from-amber-500 hover:to-amber-600 active:scale-[0.99] border-transparent font-semibold shadow-sm',
-  dark: 'bg-slate-900 text-white hover:bg-slate-800 active:bg-slate-950 border-slate-900 font-medium shadow-xs',
+  accent: 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 hover:from-amber-500 hover:to-amber-600 active:scale-[0.99] border-transparent font-semibold',
+  dark: 'bg-slate-900 text-white hover:bg-slate-800 active:bg-slate-950 border-slate-900 font-medium',
 };
 
 const SIZES = {

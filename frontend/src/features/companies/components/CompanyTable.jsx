@@ -43,18 +43,18 @@ export default function CompanyTable({
 
       {/* Table */}
       <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider text-[11px]">
+        <div className="overflow-x-auto bg-white">
+          <table className="w-full text-left text-xs bg-white">
+            <thead className="bg-white border-b border-slate-200 text-black font-bold uppercase tracking-wider text-[11px]">
               <tr>
-                <th className="px-5 py-3.5">Logo</th>
-                <th className="px-5 py-3.5">Doanh nghiệp</th>
-                <th className="px-5 py-3.5">Website chính thức</th>
-                <th className="px-5 py-3.5">Giới thiệu vắn tắt</th>
-                <th className="px-5 py-3.5 text-right">Thao tác</th>
+                <th className="px-5 py-3.5 text-black font-bold">Logo</th>
+                <th className="px-5 py-3.5 text-black font-bold">Doanh nghiệp</th>
+                <th className="px-5 py-3.5 text-black font-bold">Website chính thức</th>
+                <th className="px-5 py-3.5 text-black font-bold">Giới thiệu vắn tắt</th>
+                <th className="px-5 py-3.5 text-right text-black font-bold">Thao tác</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700">
+            <tbody className="divide-y divide-slate-100 bg-white text-slate-900">
               {isLoading ? (
                 <tr>
                   <td colSpan={5} className="px-5 py-12 text-center text-slate-400">

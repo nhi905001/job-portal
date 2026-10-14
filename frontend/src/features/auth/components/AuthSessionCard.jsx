@@ -18,7 +18,7 @@ export default function AuthSessionCard({ user, onNavigate, onLogout }) {
     <Card className="shadow-none border-slate-200">
       <Card.Header>
         <div className="flex items-center justify-between">
-          <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-slate-100 text-slate-800 border border-slate-200">
+          <span className="text-xs font-medium px-2.5 py-1 rounded-none bg-slate-100 text-slate-800 border border-slate-200">
             {roleMeta.text}
           </span>
           <span className="text-xs text-emerald-600 font-medium flex items-center gap-1.5">

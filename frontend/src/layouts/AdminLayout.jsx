@@ -137,9 +137,9 @@ export default function AdminLayout() {
                         key={item.to}
                         to={item.to}
                         onClick={() => setSidebarOpen(false)}
-                        className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 ${
+                        className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-medium ${
                           active
-                            ? 'bg-amber-400 text-slate-950 font-bold shadow-sm shadow-amber-400/25 ring-1 ring-amber-400'
+                            ? 'bg-amber-400 text-slate-950 font-bold'
                             : 'text-slate-600 hover:text-slate-950 hover:bg-slate-50'
                         }`}
                       >
@@ -169,9 +169,9 @@ export default function AdminLayout() {
                           key={item.to}
                           to={item.to}
                           onClick={() => setSidebarOpen(false)}
-                          className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 ${
+                          className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-medium ${
                             active
-                              ? 'bg-amber-400 text-slate-950 font-bold shadow-sm shadow-amber-400/25 ring-1 ring-amber-400'
+                              ? 'bg-amber-400 text-slate-950 font-bold'
                               : 'text-slate-600 hover:text-slate-950 hover:bg-slate-50'
                           }`}
                         >
@@ -249,14 +249,14 @@ export default function AdminLayout() {
               <input
                 type="text"
                 placeholder="Quick Search (ctrl + D)"
-                className="w-full pl-9 pr-14 py-2 bg-slate-50 hover:bg-slate-100/60 focus:bg-white border border-slate-200/90 rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all"
+                className="w-full pl-9 pr-14 py-2 bg-white border border-slate-300 rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && e.target.value.trim()) {
                     navigate(`/admin/jobs?q=${encodeURIComponent(e.target.value.trim())}`);
                   }
                 }}
               />
-              <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 bg-white border border-slate-200 px-1.5 py-0.5 rounded font-mono shadow-2xs">
+              <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 bg-white border border-slate-200 px-1.5 py-0.5 rounded font-mono">
                 ⌘D
               </span>
             </div>
@@ -267,7 +267,7 @@ export default function AdminLayout() {
             {/* View Public Portal */}
             <Link
               to="/"
-              className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 px-3.5 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors shadow-2xs"
+              className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 px-3.5 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50"
             >
               <span>Xem Cổng Việc Làm</span>
               <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
@@ -281,9 +281,9 @@ export default function AdminLayout() {
               <button
                 type="button"
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                className="flex items-center gap-2.5 p-1 pl-1.5 sm:pl-3 bg-white border border-slate-200/90 rounded-2xl hover:bg-slate-50/80 transition-colors shadow-2xs"
+                className="flex items-center gap-2.5 p-1 pl-1.5 sm:pl-3 bg-white border border-slate-200/90 rounded-2xl hover:bg-slate-50/80"
               >
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-400 to-amber-300 text-slate-950 font-bold text-xs flex items-center justify-center shrink-0 shadow-2xs">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-400 to-amber-300 text-slate-950 font-bold text-xs flex items-center justify-center shrink-0">
                   {user?.fullName ? user.fullName.charAt(0).toUpperCase() : 'U'}
                 </div>
                 <div className="text-left hidden sm:block">
@@ -299,7 +299,7 @@ export default function AdminLayout() {
 
               {/* User Dropdown */}
               {userDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-52 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 z-50 text-xs">
+                <div className="absolute right-0 mt-2 w-52 bg-white border border-slate-200 rounded-2xl py-2 z-50 text-xs">
                   <div className="px-4 py-2 border-b border-slate-100">
                     <p className="font-bold text-slate-900">{user?.fullName}</p>
                     <p className="text-slate-500 truncate text-[11px]">{user?.email}</p>

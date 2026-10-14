@@ -26,12 +26,12 @@ export default function JobDetailHeader({
         <div className="flex flex-wrap items-center gap-2 mb-2.5">
           <JobStatusBadge status={job.status} />
           {job.jobType && (
-            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200/60">
+            <span className="text-[11px] font-normal px-3 py-0.5 rounded-none bg-indigo-600 text-white border border-indigo-600">
               {job.jobType.name}
             </span>
           )}
           {job.industry && (
-            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200/70">
+            <span className="text-[11px] font-normal px-3 py-0.5 rounded-none bg-amber-600 text-white border border-amber-600">
               {job.industry.name}
             </span>
           )}

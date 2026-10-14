@@ -22,9 +22,6 @@ export default function HomeHeroSearch({
           <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
             Job Board
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 font-normal">
-            Khám phá cơ hội nghề nghiệp hàng đầu từ các công ty công nghệ và doanh nghiệp uy tín.
-          </p>
         </div>
       </div>
 
@@ -93,7 +90,7 @@ export default function HomeHeroSearch({
                 key={idx}
                 type="button"
                 onClick={() => onRemoveFilter?.(tag.type, tag.id)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200/80 transition-colors font-medium group"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-none bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200/80 font-medium group"
               >
                 <X className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-700" />
                 <span>{tag.label}</span>
@@ -102,7 +99,7 @@ export default function HomeHeroSearch({
             <button
               type="button"
               onClick={onClearAll}
-              className="text-slate-500 hover:text-slate-900 font-semibold px-2 py-1 text-xs transition-colors underline-offset-4 hover:underline"
+              className="text-slate-500 hover:text-slate-900 font-semibold px-2 py-1 text-xs underline-offset-4 hover:underline"
             >
               Clear All
             </button>
@@ -115,7 +112,7 @@ export default function HomeHeroSearch({
                 key={suggestion}
                 type="button"
                 onClick={() => onQuickFilter?.(suggestion)}
-                className="px-3 py-1 rounded-full bg-white hover:bg-amber-50 hover:text-amber-900 hover:border-amber-300 border border-slate-200/90 text-slate-600 text-[11px] transition-colors"
+                className="px-3 py-1 rounded-none bg-white hover:bg-amber-50 hover:text-amber-900 hover:border-amber-300 border border-slate-200/90 text-slate-600 text-[11px]"
               >
                 {suggestion}
               </button>

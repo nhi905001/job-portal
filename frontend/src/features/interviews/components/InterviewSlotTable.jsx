@@ -12,19 +12,19 @@ export default function InterviewSlotTable({
   const { user } = useAuth();
   const isRecruiter = user?.role === 'RECRUITER';
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-left text-xs">
-        <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-medium uppercase tracking-wider text-[11px]">
+    <div className="overflow-x-auto bg-white">
+      <table className="w-full text-left text-xs bg-white">
+        <thead className="bg-white border-b border-slate-200 text-black font-bold uppercase tracking-wider text-[11px]">
           <tr>
-            <th className="px-5 py-3.5">Vị trí tuyển dụng</th>
-            <th className="px-5 py-3.5">Thời gian phỏng vấn</th>
-            <th className="px-5 py-3.5">Link phòng họp (Online)</th>
-            <th className="px-5 py-3.5">Ứng viên đã đặt</th>
-            <th className="px-5 py-3.5">Trạng thái khung giờ</th>
-            <th className="px-5 py-3.5 text-right">Thao tác</th>
+            <th className="px-5 py-3.5 text-black font-bold">Vị trí tuyển dụng</th>
+            <th className="px-5 py-3.5 text-black font-bold">Thời gian phỏng vấn</th>
+            <th className="px-5 py-3.5 text-black font-bold">Link phòng họp (Online)</th>
+            <th className="px-5 py-3.5 text-black font-bold">Ứng viên đã đặt</th>
+            <th className="px-5 py-3.5 text-black font-bold">Trạng thái khung giờ</th>
+            <th className="px-5 py-3.5 text-right text-black font-bold">Thao tác</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100 text-slate-700">
+        <tbody className="divide-y divide-slate-100 bg-white text-slate-900">
           {isLoading ? (
             <tr>
               <td colSpan={6} className="px-5 py-12 text-center text-slate-500">
@@ -94,10 +94,10 @@ export default function InterviewSlotTable({
 
                   <td className="px-5 py-4">
                     <span
-                      className={`px-2.5 py-0.5 rounded-full font-medium text-[11px] border inline-block ${
+                      className={`px-3 py-0.5 rounded-none font-normal text-[11px] border inline-block ${
                         isBooked
-                          ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                          : 'bg-amber-50 text-amber-800 border-amber-200'
+                          ? 'bg-emerald-600 text-white border-emerald-600'
+                          : 'bg-amber-600 text-white border-amber-600'
                       }`}
                     >
                       {isBooked ? 'Đã được đặt' : 'Đang còn trống'}

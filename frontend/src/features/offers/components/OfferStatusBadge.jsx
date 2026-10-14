@@ -4,41 +4,41 @@ import { Clock, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
 const STATUS_CONFIG = {
   PENDING: {
     label: 'Chờ phản hồi',
-    className: 'bg-amber-50 text-amber-800 border-amber-200/80',
-    icon: <Clock className="w-3.5 h-3.5 text-amber-600 shrink-0" />,
+    className: 'bg-amber-600 text-white border-amber-600',
+    icon: <Clock className="w-3.5 h-3.5 text-white shrink-0" />,
   },
   ACCEPTED: {
     label: 'Đã chấp nhận',
-    className: 'bg-emerald-50 text-emerald-800 border-emerald-200/80',
-    icon: <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />,
+    className: 'bg-emerald-600 text-white border-emerald-600',
+    icon: <CheckCircle2 className="w-3.5 h-3.5 text-white shrink-0" />,
   },
   REJECTED: {
     label: 'Đã từ chối',
-    className: 'bg-rose-50 text-rose-700 border-rose-200/80',
-    icon: <XCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />,
+    className: 'bg-rose-600 text-white border-rose-600',
+    icon: <XCircle className="w-3.5 h-3.5 text-white shrink-0" />,
   },
   EXPIRED: {
     label: 'Đã hết hạn',
-    className: 'bg-slate-50 text-slate-600 border-slate-200',
-    icon: <AlertCircle className="w-3.5 h-3.5 text-slate-500 shrink-0" />,
+    className: 'bg-slate-500 text-white border-slate-500',
+    icon: <AlertCircle className="w-3.5 h-3.5 text-white shrink-0" />,
   },
   CANCELLED: {
     label: 'Đã hủy',
-    className: 'bg-slate-100 text-slate-700 border-slate-300',
-    icon: <XCircle className="w-3.5 h-3.5 text-slate-500 shrink-0" />,
+    className: 'bg-slate-600 text-white border-slate-600',
+    icon: <XCircle className="w-3.5 h-3.5 text-white shrink-0" />,
   },
 };
 
 export default function OfferStatusBadge({ status }) {
   const config = STATUS_CONFIG[status] || {
     label: status || 'Không rõ',
-    className: 'bg-slate-50 text-slate-700 border-slate-200',
+    className: 'bg-slate-600 text-white border-slate-600',
     icon: null,
   };
 
   return (
     <span
-      className={`px-2.5 py-0.5 rounded-full font-medium text-[11px] border inline-flex items-center gap-1.5 ${config.className}`}
+      className={`px-3 py-0.5 rounded-none font-normal text-[11px] border inline-flex items-center gap-1.5 ${config.className}`}
     >
       {config.icon}
       <span>{config.label}</span>

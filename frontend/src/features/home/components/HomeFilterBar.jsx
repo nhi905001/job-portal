@@ -44,7 +44,7 @@ export default function HomeFilterBar({
             <SlidersHorizontal className="w-3.5 h-3.5 text-amber-600" />
             <span>Filters</span>
             {activeCount > 0 && (
-              <span className="w-4 h-4 rounded-full bg-amber-400 text-slate-950 font-bold text-[10px] flex items-center justify-center">
+              <span className="w-4 h-4 rounded-none bg-amber-400 text-slate-950 font-bold text-[10px] flex items-center justify-center">
                 {activeCount}
               </span>
             )}
@@ -97,7 +97,7 @@ export default function HomeFilterBar({
               <select
                 value={selectedIndustry}
                 onChange={(e) => onIndustryChange(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-amber-400 focus:bg-white transition-all cursor-pointer"
+                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-800 focus:outline-none cursor-pointer"
               >
                 <option value="">Tất cả ngành nghề</option>
                 {industries.map((ind) => (
@@ -116,7 +116,7 @@ export default function HomeFilterBar({
               <select
                 value={selectedJobType}
                 onChange={(e) => onJobTypeChange(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-amber-400 focus:bg-white transition-all cursor-pointer"
+                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-800 focus:outline-none cursor-pointer"
               >
                 <option value="">Tất cả loại hình (Full time, Part time...)</option>
                 {jobTypes.map((t) => (

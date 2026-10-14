@@ -9,19 +9,19 @@ export default function ReviewTable({ reviews, companies = [], isLoading, onDele
   }, [companies]);
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-left text-xs">
-        <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-medium uppercase tracking-wider text-[11px]">
+    <div className="overflow-x-auto bg-white">
+      <table className="w-full text-left text-xs bg-white">
+        <thead className="bg-white border-b border-slate-200 text-black font-bold uppercase tracking-wider text-[11px]">
           <tr>
-            <th className="px-5 py-3.5">Người đánh giá</th>
-            <th className="px-5 py-3.5">Doanh nghiệp</th>
-            <th className="px-5 py-3.5">Đánh giá</th>
-            <th className="px-5 py-3.5">Nội dung nhận xét</th>
-            <th className="px-5 py-3.5">Ngày đăng</th>
-            <th className="px-5 py-3.5 text-right">Thao tác</th>
+            <th className="px-5 py-3.5 text-black font-bold">Người đánh giá</th>
+            <th className="px-5 py-3.5 text-black font-bold">Doanh nghiệp</th>
+            <th className="px-5 py-3.5 text-black font-bold">Đánh giá</th>
+            <th className="px-5 py-3.5 text-black font-bold">Nội dung nhận xét</th>
+            <th className="px-5 py-3.5 text-black font-bold">Ngày đăng</th>
+            <th className="px-5 py-3.5 text-right text-black font-bold">Thao tác</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100 text-slate-700">
+        <tbody className="divide-y divide-slate-100 bg-white text-slate-900">
           {isLoading ? (
             <tr>
               <td colSpan={6} className="px-5 py-12 text-center text-slate-500">
