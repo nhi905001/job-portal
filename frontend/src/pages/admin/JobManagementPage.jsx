@@ -59,7 +59,7 @@ export default function JobManagementPage() {
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
               Job Board
             </h1>
-            <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[11px] font-bold border border-amber-200/60">
+            <span className="px-2.5 py-0.5 rounded-none bg-amber-100 text-amber-900 text-[11px] font-normal border border-amber-200/60">
               {user?.role === 'ADMIN' ? 'Admin Tuyển Dụng' : 'Nhà Tuyển Dụng'}
             </span>
           </div>
@@ -125,7 +125,7 @@ export default function JobManagementPage() {
           onDeleteClick={handleOpenDelete}
         />
 
-        <div className="px-6 py-3 border-t border-slate-100 bg-slate-50/40">
+        <div className="px-6 py-3 border-t border-slate-100 bg-white">
           <Pagination
             page={page}
             totalPages={totalPages}

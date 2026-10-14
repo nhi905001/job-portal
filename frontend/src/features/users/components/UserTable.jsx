@@ -4,19 +4,19 @@ import UserRoleBadge from './UserRoleBadge';
 
 export default function UserTable({ users, isLoading, currentUserId, onToggleActive }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-left text-xs">
-        <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-medium uppercase tracking-wider text-[11px]">
+    <div className="overflow-x-auto bg-white">
+      <table className="w-full text-left text-xs bg-white">
+        <thead className="bg-white border-b border-slate-200 text-black font-bold uppercase tracking-wider text-[11px]">
           <tr>
-            <th className="px-5 py-3.5">Họ và tên</th>
-            <th className="px-5 py-3.5">Email</th>
-            <th className="px-5 py-3.5">Vai trò (Role)</th>
-            <th className="px-5 py-3.5">Doanh nghiệp trực thuộc</th>
-            <th className="px-5 py-3.5">Trạng thái</th>
-            <th className="px-5 py-3.5 text-right">Thao tác</th>
+            <th className="px-5 py-3.5 text-black font-bold">Họ và tên</th>
+            <th className="px-5 py-3.5 text-black font-bold">Email</th>
+            <th className="px-5 py-3.5 text-black font-bold">Vai trò (Role)</th>
+            <th className="px-5 py-3.5 text-black font-bold">Doanh nghiệp trực thuộc</th>
+            <th className="px-5 py-3.5 text-black font-bold">Trạng thái</th>
+            <th className="px-5 py-3.5 text-right text-black font-bold">Thao tác</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100 text-slate-700">
+        <tbody className="divide-y divide-slate-100 bg-white text-slate-900">
           {isLoading ? (
             <tr>
               <td colSpan={6} className="px-5 py-12 text-center text-slate-500">
@@ -60,10 +60,10 @@ export default function UserTable({ users, isLoading, currentUserId, onToggleAct
 
                   <td className="px-5 py-4">
                     <span
-                      className={`px-2.5 py-0.5 rounded-full font-medium text-[11px] border inline-block ${
+                      className={`px-3 py-0.5 rounded-none font-normal text-[11px] border inline-block ${
                         u.active
-                          ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                          : 'bg-rose-50 text-rose-800 border-rose-200'
+                          ? 'bg-emerald-600 text-white border-emerald-600'
+                          : 'bg-rose-600 text-white border-rose-600'
                       }`}
                     >
                       {u.active ? 'Hoạt động' : 'Đã khóa'}

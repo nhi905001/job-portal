@@ -32,20 +32,20 @@ export default function JobTable({ jobs = [], isLoading, onEditClick, onDeleteCl
   };
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-left text-xs">
-        <thead className="bg-slate-50/80 border-b border-slate-200/80 text-slate-500 font-bold uppercase tracking-wider text-[11px]">
+    <div className="overflow-x-auto bg-white">
+      <table className="w-full text-left text-xs bg-white">
+        <thead className="bg-white border-b border-slate-200 text-black font-bold uppercase tracking-wider text-[11px]">
           <tr>
-            <th className="px-5 py-4">Tiêu đề tin tuyển dụng</th>
-            <th className="px-5 py-4">Ngành & Loại hình</th>
-            <th className="px-5 py-4">Địa điểm làm việc</th>
-            <th className="px-5 py-4">Mức lương</th>
-            <th className="px-5 py-4">Ngày đăng & Hạn nộp</th>
-            <th className="px-5 py-4">Trạng thái</th>
-            <th className="px-5 py-4 text-right">Thao tác</th>
+            <th className="px-5 py-4 text-black font-bold">Tiêu đề tin tuyển dụng</th>
+            <th className="px-5 py-4 text-black font-bold">Ngành & Loại hình</th>
+            <th className="px-5 py-4 text-black font-bold">Địa điểm làm việc</th>
+            <th className="px-5 py-4 text-black font-bold">Mức lương</th>
+            <th className="px-5 py-4 text-black font-bold">Ngày đăng & Hạn nộp</th>
+            <th className="px-5 py-4 text-black font-bold">Trạng thái</th>
+            <th className="px-5 py-4 text-right text-black font-bold">Thao tác</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100 text-slate-700">
+        <tbody className="divide-y divide-slate-100 bg-white text-slate-900">
           {isLoading ? (
             <tr>
               <td colSpan={7} className="px-5 py-16 text-center text-slate-500">
@@ -70,12 +70,12 @@ export default function JobTable({ jobs = [], isLoading, onEditClick, onDeleteCl
               const locationAddress = job.location?.address;
 
               return (
-                <tr key={job.id} className="hover:bg-amber-50/20 transition-colors group">
+                <tr key={job.id} className="hover:bg-slate-50/80 transition-colors group">
                   {/* Title & Company & Recruiter */}
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-9 h-9 rounded-xl flex items-center justify-center font-extrabold text-xs shrink-0 border shadow-2xs ${getCompanyBg(
+                        className={`w-9 h-9 rounded-xl flex items-center justify-center font-extrabold text-xs shrink-0 border ${getCompanyBg(
                           companyName
                         )}`}
                       >
@@ -84,16 +84,16 @@ export default function JobTable({ jobs = [], isLoading, onEditClick, onDeleteCl
                       <div className="min-w-0 max-w-xs">
                         <Link
                           to={`/jobs/${job.id}`}
-                          className="font-bold text-slate-900 group-hover:text-amber-800 transition-colors block truncate hover:underline"
+                          className="font-bold text-black group-hover:text-amber-800 transition-colors block truncate hover:underline"
                         >
                           {job.title}
                         </Link>
-                        <div className="flex items-center gap-1.5 text-[11px] text-slate-500 mt-0.5">
-                          <span className="font-medium text-slate-700 truncate">{companyName}</span>
+                        <div className="flex items-center gap-1.5 text-[11px] text-slate-600 mt-0.5">
+                          <span className="font-semibold text-black truncate">{companyName}</span>
                           {job.recruiter?.fullName && (
                             <>
                               <span className="text-slate-300">•</span>
-                              <span className="text-slate-400 truncate">Đăng bởi: {job.recruiter.fullName}</span>
+                              <span className="text-slate-500 truncate">Đăng bởi: {job.recruiter.fullName}</span>
                             </>
                           )}
                         </div>
@@ -103,22 +103,22 @@ export default function JobTable({ jobs = [], isLoading, onEditClick, onDeleteCl
 
                   {/* Industry & JobType */}
                   <td className="px-5 py-4">
-                    <span className="font-semibold text-slate-800 block text-xs">
+                    <span className="font-bold text-black block text-xs">
                       {job.industry?.name || 'Chung'}
                     </span>
-                    <span className="inline-block mt-0.5 text-[10px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
+                    <span className="inline-block mt-0.5 text-[10px] font-medium text-white bg-indigo-600 px-2.5 py-0.5 rounded-none border border-indigo-600">
                       {job.jobType?.name || 'Toàn thời gian'}
                     </span>
                   </td>
 
                   {/* Location */}
-                  <td className="px-5 py-4 text-slate-600 max-w-xs">
+                  <td className="px-5 py-4 text-black max-w-xs">
                     <div className="flex items-start gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+                      <MapPin className="w-3.5 h-3.5 text-slate-500 shrink-0 mt-0.5" />
                       <div>
-                        <span className="font-semibold text-xs text-slate-800 block">{locationCity}</span>
+                        <span className="font-semibold text-xs text-black block">{locationCity}</span>
                         {locationAddress && (
-                          <span className="text-[11px] text-slate-400 line-clamp-1">{locationAddress}</span>
+                          <span className="text-[11px] text-slate-600 line-clamp-1">{locationAddress}</span>
                         )}
                       </div>
                     </div>
@@ -132,12 +132,12 @@ export default function JobTable({ jobs = [], isLoading, onEditClick, onDeleteCl
                   </td>
 
                   {/* Deadline & CreatedAt */}
-                  <td className="px-5 py-4 text-slate-500 whitespace-nowrap text-xs">
-                    <span className="font-medium text-slate-800 block">
+                  <td className="px-5 py-4 text-black whitespace-nowrap text-xs">
+                    <span className="font-semibold text-black block">
                       Hạn: {formatDate(job.deadline)}
                     </span>
                     {job.createdAt && (
-                      <span className="text-[11px] text-slate-400 block mt-0.5">
+                      <span className="text-[11px] text-slate-500 block mt-0.5">
                         Tạo: {formatDate(job.createdAt)}
                       </span>
                     )}

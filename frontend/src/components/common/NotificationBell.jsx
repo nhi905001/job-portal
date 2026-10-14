@@ -136,7 +136,7 @@ export default function NotificationBell() {
             <div className="flex items-center gap-2">
               <span className="font-bold text-sm text-slate-900">Thông báo hệ thống</span>
               {unreadCount > 0 && (
-                <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-900 border border-amber-200/70 text-[10px] font-bold">
+                <span className="px-2 py-0.5 rounded-none bg-amber-50 text-amber-900 border border-amber-200/70 text-[10px] font-bold">
                   {unreadCount} mới
                 </span>
               )}

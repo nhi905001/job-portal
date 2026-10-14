@@ -53,7 +53,7 @@ export default function ConfirmDialog({
 
       <div className="flex min-h-full items-center justify-center p-4 text-center">
         <div
-          className="relative transform overflow-hidden rounded-3xl bg-white border border-[#EFE9DF] text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-md p-6"
+          className="relative transform overflow-hidden rounded-3xl bg-white border border-[#EFE9DF] text-left transition-all sm:my-8 sm:w-full sm:max-w-md p-6"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-start gap-4">

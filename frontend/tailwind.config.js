@@ -7,9 +7,34 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    boxShadow: {
+      none: 'none',
+      DEFAULT: 'none',
+      sm: 'none',
+      md: 'none',
+      lg: 'none',
+      xl: 'none',
+      '2xl': 'none',
+      '3xl': 'none',
+      inner: 'none',
+      xs: 'none',
+      '2xs': 'none',
+      card: 'none',
+      'card-hover': 'none',
+      subtle: 'none',
+    },
+    dropShadow: {
+      none: 'none',
+      DEFAULT: 'none',
+      sm: 'none',
+      md: 'none',
+      lg: 'none',
+      xl: 'none',
+      '2xl': 'none',
+    },
     extend: {
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'Roboto', ...defaultTheme.fontFamily.sans],
+        sans: ['"Open Sans"', 'Roboto', 'Arial', ...defaultTheme.fontFamily.sans],
       },
       colors: {
         brand: {
@@ -25,11 +50,6 @@ export default {
           900: '#71400D',
           warm: '#F6B779',
         },
-      },
-      boxShadow: {
-        'card': '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)',
-        'card-hover': '0 10px 25px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.04)',
-        'subtle': '0 2px 8px rgba(0, 0, 0, 0.04)',
       },
     },
   },

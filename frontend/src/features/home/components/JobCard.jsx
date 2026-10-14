@@ -83,12 +83,12 @@ export default function JobCard({ job }) {
             </h3>
 
             {/* Tags (Remote / JobType / Industry) */}
-            <span className="inline-flex items-center text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200/60">
+            <span className="inline-flex items-center text-[11px] font-normal px-3 py-0.5 rounded-none bg-indigo-600 text-white border border-indigo-600">
               {jobTypeName}
             </span>
 
             {industryName && (
-              <span className="inline-flex items-center text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200/70">
+              <span className="inline-flex items-center text-[11px] font-normal px-3 py-0.5 rounded-none bg-amber-600 text-white border border-amber-600">
                 {industryName}
               </span>
             )}

@@ -47,7 +47,7 @@ export default function OfferManagementPage() {
               Quản lý Thư Mời Nhận Việc (Offers)
             </h1>
             {isAdmin && (
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold border bg-slate-100 text-slate-700 border-slate-200">
+              <span className="px-2.5 py-0.5 rounded-none text-[11px] font-normal border bg-slate-100 text-slate-700 border-slate-200">
                 Chế độ giám sát
               </span>
             )}

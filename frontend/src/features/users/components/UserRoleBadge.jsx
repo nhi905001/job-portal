@@ -1,9 +1,9 @@
 import React from 'react';
 
 const ROLE_STYLES = {
-  ADMIN: 'bg-amber-50 text-amber-900 border-amber-200/80',
-  RECRUITER: 'bg-orange-50 text-orange-900 border-orange-200/80',
-  JOB_SEEKER: 'bg-slate-100 text-slate-800 border-slate-200',
+  ADMIN: 'bg-purple-600 text-white border-purple-600',
+  RECRUITER: 'bg-amber-600 text-white border-amber-600',
+  JOB_SEEKER: 'bg-slate-600 text-white border-slate-600',
 };
 
 const ROLE_LABELS = {
@@ -13,11 +13,11 @@ const ROLE_LABELS = {
 };
 
 export default function UserRoleBadge({ role }) {
-  const style = ROLE_STYLES[role] || 'bg-slate-50 text-slate-700 border-slate-200';
+  const style = ROLE_STYLES[role] || 'bg-slate-600 text-white border-slate-600';
   const label = ROLE_LABELS[role] || role;
 
   return (
-    <span className={`px-2.5 py-0.5 rounded-full font-medium text-[11px] border inline-block ${style}`}>
+    <span className={`px-3 py-0.5 rounded-none font-normal text-[11px] border inline-block ${style}`}>
       {label}
     </span>
   );

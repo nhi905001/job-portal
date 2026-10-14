@@ -59,17 +59,17 @@ export default function LocationTable({
 
       {/* Table */}
       <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider text-[11px]">
+        <div className="overflow-x-auto bg-white">
+          <table className="w-full text-left text-xs bg-white">
+            <thead className="bg-white border-b border-slate-200 text-black font-bold uppercase tracking-wider text-[11px]">
               <tr>
-                <th className="px-5 py-3.5">Doanh nghiệp trực thuộc</th>
-                <th className="px-5 py-3.5">Thành phố / Tỉnh</th>
-                <th className="px-5 py-3.5">Địa chỉ chi tiết</th>
-                <th className="px-5 py-3.5 text-right">Thao tác</th>
+                <th className="px-5 py-3.5 text-black font-bold">Doanh nghiệp trực thuộc</th>
+                <th className="px-5 py-3.5 text-black font-bold">Thành phố / Tỉnh</th>
+                <th className="px-5 py-3.5 text-black font-bold">Địa chỉ chi tiết</th>
+                <th className="px-5 py-3.5 text-right text-black font-bold">Thao tác</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700">
+            <tbody className="divide-y divide-slate-100 bg-white text-slate-900">
               {isLoading ? (
                 <tr>
                   <td colSpan={4} className="px-5 py-12 text-center text-slate-400">

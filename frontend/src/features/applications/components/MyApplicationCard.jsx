@@ -103,7 +103,7 @@ export default function MyApplicationCard({
                 Lịch phỏng vấn: {formatDate(bookedSlot.startTime)} ({new Date(bookedSlot.startTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })} - {new Date(bookedSlot.endTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })})
               </span>
             </div>
-            <span className="text-[11px] font-semibold text-blue-700 bg-blue-100/90 px-2 py-0.5 rounded-full flex items-center gap-1">
+            <span className="text-[11px] font-semibold text-blue-700 bg-blue-100/90 px-2 py-0.5 rounded-none flex items-center gap-1">
               <CheckCircle2 className="w-3 h-3 text-blue-600" />
               Đã xác nhận lịch
             </span>
