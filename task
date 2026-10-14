@@ -201,4 +201,5 @@ Toàn bộ 5 Phase theo Product Backlog (24 User Stories U001–U024) đã đư�
 4. **Phase 4:** Cổng Quản trị viên Toàn quyền (`/admin/users`, `/admin/companies`, `/admin/categories`, `/admin/reviews`).
 5. **Phase 5:** Chuông thông báo toàn hệ thống, Interceptor bắt lỗi 401/400/409, Toast cảnh báo và thiết kế chuẩn Modern Clean Dashboard & Warm Minimal.
 
-Hệ thống đã được kiểm thử, build production thành công và push đầy đủ lên nhánh `fe` trên GitHub repository.
+cd backend
+./mvnw spring-boot:run
