@@ -26,10 +26,13 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/offers")
-@RequiredArgsConstructor
 public class OfferController {
 
 	private final OfferService offerService;
+
+	public OfferController(OfferService offerService) {
+		this.offerService = offerService;
+	}
 
 	// POST /api/offers : recruiter gửi offer. Admin không có quyền gửi offer.
 	@PostMapping
