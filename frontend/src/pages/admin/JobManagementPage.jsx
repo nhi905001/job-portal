@@ -55,17 +55,9 @@ export default function JobManagementPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-              Job Board
-            </h1>
-            <span className="px-2.5 py-0.5 rounded-none bg-amber-100 text-amber-900 text-[11px] font-normal border border-amber-200/60">
-              {user?.role === 'ADMIN' ? 'Admin Tuyển Dụng' : 'Nhà Tuyển Dụng'}
-            </span>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Đăng tin tuyển dụng, kiểm soát trạng thái, chỉ định chi nhánh và theo dõi hồ sơ ứng tuyển theo thời gian thực.
-          </p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Job Board
+          </h1>
         </div>
 
         <Button
